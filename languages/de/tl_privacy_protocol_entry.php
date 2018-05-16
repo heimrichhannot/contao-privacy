@@ -14,18 +14,19 @@ $lang['dateAdded'][0] = 'Zeitpunkt';
 $lang['dateAdded'][1] = 'In diesem Feld wird der Zeitpunkt gespeichert, zu dem die Interaktion stattgefunden hat.';
 
 // user
-$lang['ip'][0]        = 'IP-Adresse';
-$lang['ip'][1]        = 'In diesem Feld wird der Typ gespeichert.';
-$lang['firstname'][0] = 'Vorname';
-$lang['firstname'][1] = 'In diesem Feld wird der Typ gespeichert.';
-$lang['lastname'][0]  = 'Nachname';
-$lang['lastname'][1]  = 'In diesem Feld wird der Typ gespeichert.';
-$lang['email'][0]     = 'E-Mail-Adresse';
-$lang['email'][1]     = 'In diesem Feld wird der Typ gespeichert.';
-$lang['member'][0]    = 'Mitglied';
-$lang['member'][1]    = 'In diesem Feld wird der Typ gespeichert.';
-$lang['user'][0]      = 'Benutzer';
-$lang['user'][1]      = 'In diesem Feld wird der Typ gespeichert.';
+$lang['personalDataExplanation'] = 'Hinweis: Blau hervorgehobene Felder beinhalten personenbezogene Daten.';
+$lang['ip'][0]                   = 'IP-Adresse';
+$lang['ip'][1]                   = 'In diesem Feld wird die IP-Adresse des Besuchers gespeichert.';
+$lang['firstname'][0]            = 'Vorname';
+$lang['firstname'][1]            = 'In diesem Feld wird der Vorname des Besuchers gespeichert.';
+$lang['lastname'][0]             = 'Nachname';
+$lang['lastname'][1]             = 'In diesem Feld wird der Nachname des Besuchers gespeichert.';
+$lang['email'][0]                = 'E-Mail-Adresse';
+$lang['email'][1]                = 'In diesem Feld wird die E-Mail-Adresse des Besuchers gespeichert.';
+$lang['member'][0]               = 'Mitglied';
+$lang['member'][1]               = 'In diesem Feld wird die ID des Mitglieds gespeichert.';
+$lang['user'][0]                 = 'Benutzer';
+$lang['user'][1]                 = 'In diesem Feld wird die ID des Benutzers gespeichert.';
 
 // interaction
 $lang['url'][0]            = 'URL';
@@ -52,8 +53,8 @@ $lang['callerFile'][0]     = 'Datei';
 $lang['callerFile'][1]     = 'In diesem Feld wird der Pfad zur Datei gespeichert.';
 $lang['callerLine'][0]     = 'Code-Zeile';
 $lang['callerLine'][1]     = 'In diesem Feld wird die Code-Zeile gespeichert.';
-$lang['callerFunktion'][0] = 'Funktion';
-$lang['callerFunktion'][1] = 'In diesem Feld wird die aufrufende Funktion gespeichert.';
+$lang['callerFunction'][0] = 'Funktion';
+$lang['callerFunction'][1] = 'In diesem Feld wird die aufrufende Funktion gespeichert.';
 
 /**
  * Reference

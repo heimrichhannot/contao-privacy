@@ -4,12 +4,12 @@ This bundle contains functionality concerning privacy and the European Union's "
 
 ## Legal disclaimer
 
-Use this bundle at your own risk. Although we as the developer try our best to design this bundle to fulfill the legal requirements we CAN'T GUARANTEE anything in terms completeness and correctness. Also we don't offer any legal consulting. We strongly encourage you to consult a lawyer if you have any questions or concerns.
+Use this bundle at your own risk. Although we as the developer try our best to design this bundle to fulfill the legal requirements we __CAN'T GUARANTEE__ anything in terms completeness and correctness. Also we don't offer any legal consulting. We strongly encourage you to consult a lawyer if you have any questions or concerns.
 
 ## Features
 
 - adds the new Contao entities `tl_privacy_protocol_archive` and `tl_privacy_protocol_entry` for storing privacy relevant actions like opt-ins, ...
-- offers a simply API
+- offers a simply API for adding new entries into the privacy protocol
 
 ## Installation
 
@@ -121,7 +121,7 @@ class MyClass {
                     'lastname'  => $lastname,
                     'email'     => $email
                 ],
-                // optional: composer package name of the bundle your module lives in (version is retrieved automatically from composer.lock)
+                // optional: composer package name of the bundle your code lives in (version is retrieved automatically from composer.lock)
                 'acme/contao-my-bundle'
             );
         }
@@ -132,5 +132,5 @@ class MyClass {
 
 ## FAQ
 
-1. Question: Why isn't there the protocol entry types "opt-in" and "opt-out"?<br>
-   Answer: We strongly encourage you to build __double__ opt-in/out features since courts frequently decide that single opt-in/out processes are NOT a sufficient solution.
+1. __Question:__ Why isn't there the protocol entry types "opt-in" and "opt-out"?<br>
+   __Answer:__ We strongly encourage you to build __double__ opt-in/out features since courts frequently decide that single opt-in/out processes are NOT a sufficient solution.

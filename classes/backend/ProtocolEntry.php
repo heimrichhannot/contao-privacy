@@ -77,14 +77,14 @@ class ProtocolEntry extends \Contao\Backend
             ) . ']</span></div>';
     }
 
-    public function modifyPalette(DataContainer $dc)
+    public function modifyDca(DataContainer $dc)
     {
         Controller::loadDataContainer('tl_privacy_protocol_entry');
         $dca = &$GLOBALS['TL_DCA']['tl_privacy_protocol_entry'];
 
         if (TL_MODE == 'BE')
         {
-            // remove skipped fields
+            // fields
             if (($protocolEntry = ProtocolEntryModel::findByPk($dc->id)) === null) {
                 return false;
             }
@@ -97,7 +97,16 @@ class ProtocolEntry extends \Contao\Backend
 
             foreach ($dca['fields'] as $field => $fieldData)
             {
-                if (!in_array($field, $allowedFields) && isset($fieldData['eval']['personal']) && $fieldData['eval']['personal'])
+                $personal = isset($fieldData['eval']['personal']) && $fieldData['eval']['personal'];
+
+                if ($personal)
+                {
+                    $class = $dca['fields'][$field]['eval']['tl_class'] . ' personal-data';
+
+                    $dca['fields'][$field]['eval']['tl_class'] = $class;
+                }
+
+                if (!in_array($field, $allowedFields) && $personal)
                 {
                     unset($dca['fields'][$field]);
                 }
