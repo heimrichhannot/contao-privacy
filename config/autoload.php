@@ -24,6 +24,7 @@ ClassLoader::addNamespaces(array
 ClassLoader::addClasses(array
 (
 	// Classes
+	'HeimrichHannot\Privacy\Manager\ProtocolManager'    => 'system/modules/privacy/classes/manager/ProtocolManager.php',
 	'HeimrichHannot\Privacy\Model\ProtocolArchiveModel' => 'system/modules/privacy/classes/models/ProtocolArchiveModel.php',
 	'HeimrichHannot\Privacy\Model\ProtocolEntryModel'   => 'system/modules/privacy/classes/models/ProtocolEntryModel.php',
 	'HeimrichHannot\Privacy\Backend\ProtocolArchive'    => 'system/modules/privacy/classes/backend/ProtocolArchive.php',
