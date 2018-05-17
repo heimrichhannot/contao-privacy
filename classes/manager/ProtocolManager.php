@@ -8,6 +8,7 @@ use Contao\Controller;
 use Contao\Environment;
 use Contao\FrontendUser;
 use Contao\Module;
+use Contao\ModuleModel;
 use Contao\System;
 use HeimrichHannot\Privacy\Backend\ProtocolEntry;
 use HeimrichHannot\Privacy\Model\ProtocolArchiveModel;
@@ -23,7 +24,16 @@ class ProtocolManager
         $this->addEntry($type, $archive, $data, $packageName);
     }
 
-    public function addEntryFromModule($type, $archive, array $data, Module $module, $packageName = '')
+    /**
+     * Adds a new protocol entry from the scope of a module
+     *
+     * @param string             $type
+     * @param int                $archive
+     * @param array              $data
+     * @param Module|ModuleModel $module
+     * @param string             $packageName
+     */
+    public function addEntryFromModule($type, $archive, array $data, $module, $packageName = '')
     {
         $data['module']     = $module->id;
         $data['moduleType'] = $module->type;
@@ -39,7 +49,8 @@ class ProtocolManager
             return false;
         }
 
-        $allowedFields = deserialize($protocolArchive->personalFields, true);
+        $allowedPersonalFields = deserialize($protocolArchive->personalFields, true);
+        $allowedCodeFields = deserialize($protocolArchive->codeFields, true);
 
         Controller::loadDataContainer('tl_privacy_protocol_entry');
 
@@ -53,7 +64,12 @@ class ProtocolManager
 
         foreach ($dca['fields'] as $field => $fieldData)
         {
-            if (!in_array($field, $allowedFields) && isset($fieldData['eval']['personal']) && $fieldData['eval']['personal'])
+            if (!in_array($field, $allowedPersonalFields) && isset($fieldData['eval']['personalField']) && $fieldData['eval']['personalField'])
+            {
+                continue;
+            }
+
+            if ((!in_array($field, $allowedCodeFields) || !$protocolArchive->addCodeProtocol) && isset($fieldData['eval']['codeField']) && $fieldData['eval']['codeField'])
             {
                 continue;
             }
@@ -128,23 +144,26 @@ class ProtocolManager
                         // silently fail
                     }
                     break;
-                case 'callerFile':
+                case 'codeFile':
                     if (count($stackTrace) > 1)
                     {
-                        $protocolEntry->callerFile = $stackTrace[1]['file'];
+                        $protocolEntry->codeFile = $stackTrace[1]['file'];
                     }
                     break;
-                case 'callerLine':
+                case 'codeLine':
                     if (count($stackTrace) > 1)
                     {
-                        $protocolEntry->callerLine = $stackTrace[1]['line'];
+                        $protocolEntry->codeLine = $stackTrace[1]['line'];
                     }
                     break;
-                case 'callerFunction':
+                case 'codeFunction':
                     if (count($stackTrace) > 1)
                     {
-                        $protocolEntry->callerFunction = $stackTrace[1]['function'];
+                        $protocolEntry->codeFunction = $stackTrace[1]['function'];
                     }
+                    break;
+                case 'codeStacktrace':
+                    $protocolEntry->codeStacktrace = (new \Exception())->getTraceAsString();
                     break;
             }
 

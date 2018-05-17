@@ -40,9 +40,31 @@ class ProtocolEntry extends \Contao\Backend
 
     public function getPersonalFieldsAsOptions()
     {
-        return General::getFields('tl_privacy_protocol_entry', true, null, [
-            'personal' => true
-        ]);
+        return General::getFields(
+            'tl_privacy_protocol_entry',
+            true,
+            null,
+            [
+                'personalField' => true
+            ]
+        );
+    }
+
+    public function getCodeFieldsAsOptions()
+    {
+        return General::getFields(
+            'tl_privacy_protocol_entry',
+            true,
+            null,
+            [
+                'codeField' => true
+            ]
+        );
+    }
+
+    public function getFieldsAsOptions()
+    {
+        return General::getFields('tl_privacy_protocol_entry');
     }
 
     public function listChildren($row)
@@ -50,8 +72,8 @@ class ProtocolEntry extends \Contao\Backend
         $title = $row['id'];
 
         if (($protocolEntry = \HeimrichHannot\Privacy\Model\ProtocolEntryModel::findByPk($row['id'])) !== null
-            && ($protocolArchive = $protocolEntry->getRelated('pid')) !== null
-        ) {
+            && ($protocolArchive = $protocolEntry->getRelated('pid')) !== null)
+        {
             $dca              = &$GLOBALS['TL_DCA']['tl_privacy_protocol_entry'];
             $dc               = new DC_HastePlus('tl_privacy_protocol_entry');
             $dc->id           = $protocolEntry->id;
@@ -85,28 +107,37 @@ class ProtocolEntry extends \Contao\Backend
         if (TL_MODE == 'BE')
         {
             // fields
-            if (($protocolEntry = ProtocolEntryModel::findByPk($dc->id)) === null) {
+            if (($protocolEntry = ProtocolEntryModel::findByPk($dc->id)) === null)
+            {
                 return false;
             }
 
-            if (($protocolArchive = ProtocolArchiveModel::findByPk($protocolEntry->pid)) === null) {
+            if (($protocolArchive = ProtocolArchiveModel::findByPk($protocolEntry->pid)) === null)
+            {
                 return false;
             }
 
-            $allowedFields = deserialize($protocolArchive->personalFields, true);
+            $allowedPersonalFields = deserialize($protocolArchive->personalFields, true);
+            $allowedCodeFields     = deserialize($protocolArchive->codeFields, true);
 
             foreach ($dca['fields'] as $field => $fieldData)
             {
-                $personal = isset($fieldData['eval']['personal']) && $fieldData['eval']['personal'];
+                $isPersonalField = isset($fieldData['eval']['personalField']) && $fieldData['eval']['personalField'];
+                $isCodeField     = isset($fieldData['eval']['codeField']) && $fieldData['eval']['codeField'];
 
-                if ($personal)
+                if ($isPersonalField)
                 {
                     $class = $dca['fields'][$field]['eval']['tl_class'] . ' personal-data';
 
                     $dca['fields'][$field]['eval']['tl_class'] = $class;
                 }
 
-                if (!in_array($field, $allowedFields) && $personal)
+                if (!in_array($field, $allowedPersonalFields) && $isPersonalField)
+                {
+                    unset($dca['fields'][$field]);
+                }
+
+                if ((!in_array($field, $allowedCodeFields) || !$protocolArchive->addCodeProtocol) && $isCodeField)
                 {
                     unset($dca['fields'][$field]);
                 }

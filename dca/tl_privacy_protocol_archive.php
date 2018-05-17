@@ -71,8 +71,13 @@ $GLOBALS['TL_DCA']['tl_privacy_protocol_archive'] = [
         ]
     ],
     'palettes' => [
-        '__selector__' => [],
-        'default'      => '{general_legend},title;{config_legend},personalFieldsExplanation,personalFields,titlePattern,skipIpAnonymization;'
+        '__selector__' => [
+            'addCodeProtocol'
+        ],
+        'default'      => '{general_legend},title;{config_legend},personalFieldsExplanation,personalFields,titlePattern,skipIpAnonymization,addCodeProtocol;'
+    ],
+    'subpalettes' => [
+        'addCodeProtocol' => 'codeFields'
     ],
     'fields'   => [
         'id'                  => [
@@ -128,6 +133,21 @@ $GLOBALS['TL_DCA']['tl_privacy_protocol_archive'] = [
             'inputType' => 'checkbox',
             'eval'      => ['tl_class' => 'w50'],
             'sql'       => "char(1) NOT NULL default ''"
+        ],
+        'addCodeProtocol' => [
+            'label'                   => &$GLOBALS['TL_LANG']['tl_privacy_protocol_archive']['addCodeProtocol'],
+            'exclude'                 => true,
+            'inputType'               => 'checkbox',
+            'eval'                    => ['tl_class' => 'w50', 'submitOnChange' => true],
+            'sql'                     => "char(1) NOT NULL default ''"
+        ],
+        'codeFields'              => [
+            'label'            => &$GLOBALS['TL_LANG']['tl_privacy_protocol_archive']['codeFields'],
+            'exclude'          => true,
+            'inputType'        => 'checkbox',
+            'options_callback' => ['HeimrichHannot\Privacy\Backend\ProtocolEntry', 'getCodeFieldsAsOptions'],
+            'eval'             => ['multiple' => true, 'tl_class' => 'w50 clr', 'mandatory' => true],
+            'sql'              => "blob NULL",
         ],
     ]
 ];

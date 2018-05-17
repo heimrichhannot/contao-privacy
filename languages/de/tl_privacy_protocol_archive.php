@@ -18,6 +18,10 @@ $lang['titlePattern'][0]           = 'Titelmuster';
 $lang['titlePattern'][1]           = 'Geben Sie hier ein Muster für die Titel der Protokolleinträge in der Form "%field1% %field2%" ein.';
 $lang['skipIpAnonymization'][0]    = 'IP-Adressen NICHT anonymisieren';
 $lang['skipIpAnonymization'][1]    = 'Wählen Sie diese Option, wenn IP-Adressen NICHT anonymisiert werden sollen.';
+$lang['addCodeProtocol'][0]        = 'Quelltextbezogene Daten erfassen';
+$lang['addCodeProtocol'][1]        = 'Wählen Sie diese Option, um quelltextbezogene Daten zu erfassen.';
+$lang['codeFields'][0]             = 'Zu erfassende quelltextbezogene Daten';
+$lang['codeFields'][1]             = 'Wählen Sie hier die Felder aus, die erfasst werden sollen.';
 
 /**
  * Reference

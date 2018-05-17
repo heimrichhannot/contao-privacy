@@ -68,23 +68,24 @@ $GLOBALS['TL_DCA']['tl_privacy_protocol_entry'] = [
     'palettes' => [
         '__selector__' => [],
         'default'      => '{type_date_legend},type,dateAdded;' . '{user_legend},personalDataExplanation,ip,firstname,lastname,email,member,user;'
-                          . '{interaction_legend},url,cmsScope,bundle,bundleVersion,description,module,moduleName,moduleType,element,elementType,callerFile,callerLine,callerFunction;'
+                          . '{interaction_legend},url,cmsScope,bundle,bundleVersion,description,module,moduleName,moduleType,element,elementType;'
+                          . '{code_legend},codeFile,codeLine,codeFunction,codeStacktrace;'
     ],
     'fields'   => [
-        'id'                        => [
+        'id'                      => [
             'sql' => "int(10) unsigned NOT NULL auto_increment"
         ],
-        'pid'                       => [
+        'pid'                     => [
             'foreignKey' => 'tl_privacy_protocol_archive.title',
             'sql'        => "int(10) unsigned NOT NULL default '0'",
             'relation'   => ['type' => 'belongsTo', 'load' => 'eager']
         ],
-        'tstamp'                    => [
+        'tstamp'                  => [
             'label' => &$GLOBALS['TL_LANG']['tl_privacy_protocol_entry']['tstamp'],
             'sql'   => "int(10) unsigned NOT NULL default '0'"
         ],
         // date and time
-        'dateAdded'                 => [
+        'dateAdded'               => [
             'label'     => &$GLOBALS['TL_LANG']['tl_privacy_protocol_entry']['dateAdded'],
             'sorting'   => true,
             'flag'      => 7,
@@ -101,39 +102,39 @@ $GLOBALS['TL_DCA']['tl_privacy_protocol_entry'] = [
                 'tl_class' => 'long'
             ]
         ],
-        'ip'                        => [
+        'ip'                      => [
             'label'     => &$GLOBALS['TL_LANG']['tl_privacy_protocol_entry']['ip'],
             'exclude'   => true,
             'search'    => true,
             'inputType' => 'text',
-            'eval'      => ['maxlength' => 64, 'tl_class' => 'w50', 'personal' => true],
+            'eval'      => ['maxlength' => 64, 'tl_class' => 'w50', 'personalField' => true],
             'sql'       => "varchar(64) NOT NULL default ''"
         ],
-        'firstname'                 => [
+        'firstname'               => [
             'label'     => &$GLOBALS['TL_LANG']['tl_privacy_protocol_entry']['firstname'],
             'exclude'   => true,
             'search'    => true,
             'inputType' => 'text',
-            'eval'      => ['maxlength' => 64, 'tl_class' => 'w50', 'personal' => true],
+            'eval'      => ['maxlength' => 64, 'tl_class' => 'w50', 'personalField' => true],
             'sql'       => "varchar(64) NOT NULL default ''"
         ],
-        'lastname'                  => [
+        'lastname'                => [
             'label'     => &$GLOBALS['TL_LANG']['tl_privacy_protocol_entry']['lastname'],
             'exclude'   => true,
             'search'    => true,
             'inputType' => 'text',
-            'eval'      => ['maxlength' => 64, 'tl_class' => 'w50', 'personal' => true],
+            'eval'      => ['maxlength' => 64, 'tl_class' => 'w50', 'personalField' => true],
             'sql'       => "varchar(64) NOT NULL default ''"
         ],
-        'email'                     => [
+        'email'                   => [
             'label'     => &$GLOBALS['TL_LANG']['tl_privacy_protocol_entry']['email'],
             'exclude'   => true,
             'search'    => true,
             'inputType' => 'text',
-            'eval'      => ['maxlength' => 128, 'rgxp' => 'email', 'tl_class' => 'w50', 'personal' => true],
+            'eval'      => ['maxlength' => 128, 'rgxp' => 'email', 'tl_class' => 'w50', 'personalField' => true],
             'sql'       => "varchar(128) NOT NULL default ''"
         ],
-        'member'                    => [
+        'member'                  => [
             'label'            => &$GLOBALS['TL_LANG']['tl_privacy_protocol_entry']['member'],
             'exclude'          => true,
             'filter'           => true,
@@ -142,7 +143,7 @@ $GLOBALS['TL_DCA']['tl_privacy_protocol_entry'] = [
             'eval'             => ['tl_class' => 'w50', 'includeBlankOption' => true, 'chosen' => true],
             'sql'              => "int(10) unsigned NOT NULL default '0'"
         ],
-        'user'                      => [
+        'user'                    => [
             'label'            => &$GLOBALS['TL_LANG']['tl_privacy_protocol_entry']['user'],
             'exclude'          => true,
             'filter'           => true,
@@ -152,7 +153,7 @@ $GLOBALS['TL_DCA']['tl_privacy_protocol_entry'] = [
             'sql'              => "int(10) unsigned NOT NULL default '0'"
         ],
         // interaction
-        'url'                       => [
+        'url'                     => [
             'label'     => &$GLOBALS['TL_LANG']['tl_privacy_protocol_entry']['url'],
             'exclude'   => true,
             'search'    => true,
@@ -160,7 +161,7 @@ $GLOBALS['TL_DCA']['tl_privacy_protocol_entry'] = [
             'eval'      => ['tl_class' => 'w50'],
             'sql'       => "text NULL"
         ],
-        'cmsScope'                  => [
+        'cmsScope'                => [
             'label'     => &$GLOBALS['TL_LANG']['tl_privacy_protocol_entry']['cmsScope'],
             'exclude'   => true,
             'filter'    => true,
@@ -170,7 +171,7 @@ $GLOBALS['TL_DCA']['tl_privacy_protocol_entry'] = [
             'eval'      => ['tl_class' => 'w50', 'mandatory' => true, 'submitOnChange' => true, 'includeBlankOption' => true],
             'sql'       => "varchar(16) NOT NULL default ''"
         ],
-        'bundle'                    => [
+        'bundle'                  => [
             'label'     => &$GLOBALS['TL_LANG']['tl_privacy_protocol_entry']['bundle'],
             'exclude'   => true,
             'search'    => true,
@@ -178,7 +179,7 @@ $GLOBALS['TL_DCA']['tl_privacy_protocol_entry'] = [
             'eval'      => ['maxlength' => 64, 'tl_class' => 'w50'],
             'sql'       => "varchar(64) NOT NULL default ''"
         ],
-        'bundleVersion'             => [
+        'bundleVersion'           => [
             'label'     => &$GLOBALS['TL_LANG']['tl_privacy_protocol_entry']['bundleVersion'],
             'exclude'   => true,
             'search'    => true,
@@ -186,7 +187,7 @@ $GLOBALS['TL_DCA']['tl_privacy_protocol_entry'] = [
             'eval'      => ['maxlength' => 32, 'tl_class' => 'w50'],
             'sql'       => "varchar(32) NOT NULL default ''"
         ],
-        'type'                      => [
+        'type'                    => [
             'label'     => &$GLOBALS['TL_LANG']['tl_privacy_protocol_entry']['type'],
             'exclude'   => true,
             'filter'    => true,
@@ -196,7 +197,7 @@ $GLOBALS['TL_DCA']['tl_privacy_protocol_entry'] = [
             'eval'      => ['tl_class' => 'w50', 'mandatory' => true, 'includeBlankOption' => true],
             'sql'       => "varchar(32) NOT NULL default ''"
         ],
-        'description'               => [
+        'description'             => [
             'label'     => &$GLOBALS['TL_LANG']['tl_privacy_protocol_entry']['description'],
             'exclude'   => true,
             'search'    => true,
@@ -204,7 +205,7 @@ $GLOBALS['TL_DCA']['tl_privacy_protocol_entry'] = [
             'eval'      => ['tl_class' => 'long clr'],
             'sql'       => "text NULL"
         ],
-        'module'                    => [
+        'module'                  => [
             'label'            => &$GLOBALS['TL_LANG']['tl_privacy_protocol_entry']['module'],
             'exclude'          => true,
             'filter'           => true,
@@ -216,7 +217,7 @@ $GLOBALS['TL_DCA']['tl_privacy_protocol_entry'] = [
             'eval'             => ['tl_class' => 'w50', 'includeBlankOption' => true, 'submitOnChange' => true],
             'sql'              => "varchar(64) NOT NULL default ''"
         ],
-        'moduleName'                => [
+        'moduleName'              => [
             'label'     => &$GLOBALS['TL_LANG']['tl_privacy_protocol_entry']['module'],
             'exclude'   => true,
             'search'    => true,
@@ -224,7 +225,7 @@ $GLOBALS['TL_DCA']['tl_privacy_protocol_entry'] = [
             'eval'      => ['maxlength' => 255, 'tl_class' => 'w50'],
             'sql'       => "varchar(255) NOT NULL default ''"
         ],
-        'moduleType'                => [
+        'moduleType'              => [
             'label'     => &$GLOBALS['TL_LANG']['tl_privacy_protocol_entry']['moduleType'],
             'exclude'   => true,
             'search'    => true,
@@ -232,7 +233,7 @@ $GLOBALS['TL_DCA']['tl_privacy_protocol_entry'] = [
             'eval'      => ['maxlength' => 64, 'tl_class' => 'w50'],
             'sql'       => "varchar(64) NOT NULL default ''"
         ],
-        'element'                   => [
+        'element'                 => [
             'label'            => &$GLOBALS['TL_LANG']['tl_privacy_protocol_entry']['element'],
             'exclude'          => true,
             'filter'           => true,
@@ -244,7 +245,7 @@ $GLOBALS['TL_DCA']['tl_privacy_protocol_entry'] = [
             'eval'             => ['tl_class' => 'w50', 'includeBlankOption' => true, 'submitOnChange' => true],
             'sql'              => "varchar(64) NOT NULL default ''"
         ],
-        'elementName'               => [
+        'elementName'             => [
             'label'     => &$GLOBALS['TL_LANG']['tl_privacy_protocol_entry']['element'],
             'exclude'   => true,
             'search'    => true,
@@ -252,7 +253,7 @@ $GLOBALS['TL_DCA']['tl_privacy_protocol_entry'] = [
             'eval'      => ['maxlength' => 255, 'tl_class' => 'w50'],
             'sql'       => "varchar(255) NOT NULL default ''"
         ],
-        'elementType'               => [
+        'elementType'             => [
             'label'     => &$GLOBALS['TL_LANG']['tl_privacy_protocol_entry']['elementType'],
             'exclude'   => true,
             'search'    => true,
@@ -260,29 +261,37 @@ $GLOBALS['TL_DCA']['tl_privacy_protocol_entry'] = [
             'eval'      => ['maxlength' => 64, 'tl_class' => 'w50'],
             'sql'       => "varchar(64) NOT NULL default ''"
         ],
-        'callerFile'                => [
-            'label'     => &$GLOBALS['TL_LANG']['tl_privacy_protocol_entry']['callerFile'],
+        'codeFile'              => [
+            'label'     => &$GLOBALS['TL_LANG']['tl_privacy_protocol_entry']['codeFile'],
             'exclude'   => true,
             'search'    => true,
             'inputType' => 'text',
-            'eval'      => ['tl_class' => 'w50', 'mandatory' => true],
+            'eval'      => ['tl_class' => 'w50', 'codeField' => true],
             'sql'       => "text NULL"
         ],
-        'callerLine'                => [
-            'label'     => &$GLOBALS['TL_LANG']['tl_privacy_protocol_entry']['callerLine'],
+        'codeLine'              => [
+            'label'     => &$GLOBALS['TL_LANG']['tl_privacy_protocol_entry']['codeLine'],
             'exclude'   => true,
             'search'    => true,
             'inputType' => 'text',
-            'eval'      => ['maxlength' => 32, 'tl_class' => 'w50', 'mandatory' => true],
+            'eval'      => ['maxlength' => 32, 'tl_class' => 'w50', 'codeField' => true],
             'sql'       => "varchar(32) NOT NULL default ''"
         ],
-        'callerFunction'            => [
-            'label'     => &$GLOBALS['TL_LANG']['tl_privacy_protocol_entry']['callerFunction'],
+        'codeFunction'          => [
+            'label'     => &$GLOBALS['TL_LANG']['tl_privacy_protocol_entry']['codeFunction'],
             'exclude'   => true,
             'search'    => true,
             'inputType' => 'text',
-            'eval'      => ['maxlength' => 128, 'tl_class' => 'w50', 'mandatory' => true],
+            'eval'      => ['maxlength' => 128, 'tl_class' => 'w50', 'codeField' => true],
             'sql'       => "varchar(128) NOT NULL default ''"
+        ],
+        'codeStacktrace'        => [
+            'label'     => &$GLOBALS['TL_LANG']['tl_privacy_protocol_entry']['codeStacktrace'],
+            'exclude'   => true,
+            'search'    => true,
+            'inputType' => 'textarea',
+            'eval'      => ['class' => 'clr monospace', 'rte' => 'ace', 'codeField' => true],
+            'sql'       => "text NULL"
         ],
     ]
 ];

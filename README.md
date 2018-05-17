@@ -17,6 +17,12 @@ Use this bundle at your own risk. Although we as the developer try our best to d
 2. Update your database and clear your caches.
 3. Now you have the new menu entry "privacy" in the Contao menu on the left
 
+## Existing bundles supporting Contao Privacy Bundle
+
+We already implemented support for some of our bundles:
+
+- [heimrichhannot/contao-formhybrid](https://github.com/heimrichhannot/contao-formhybrid): This bundle offers the functionality to create DCA-powered forms in the frontend including callbacks, input types, email handling, and so on. By installing Contao Privacy Bundle you also get a checkbox for adding protocol entries after form submission.
+
 ## Usage
 
 ### The privacy protocol
