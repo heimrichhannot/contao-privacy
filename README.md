@@ -8,8 +8,10 @@ Use this bundle at your own risk. Although we as the developer try our best to d
 
 ## Features
 
-- adds the new Contao entities `tl_privacy_protocol_archive` and `tl_privacy_protocol_entry` for storing privacy relevant actions like opt-ins, ...
-- offers a simply API for adding new entries into the privacy protocol
+- adds a privacy protocol
+    - adds the new Contao entities `tl_privacy_protocol_archive` and `tl_privacy_protocol_entry` for storing privacy relevant actions like opt-ins, ...
+    - offers a simply API for adding new entries into the privacy protocol
+    - offers functionality to create new privacy protocol entries for `tl_member` callbacks (`oncreate_callback`, `onversion_callback`, `ondelete_callback`)
 
 ## Installation
 
@@ -28,9 +30,21 @@ We already implemented support for some of our bundles:
 ### The privacy protocol
 
 1. Add a new protocol archive and select the fields you'd like to store (CAUTION: Do NOT store personal data for which you don't have the user's permission!).
-2. Choose one of the following functions for adding new entries programmatically:
+2. Choose one of the following functions for adding new entries programmatically and/or create entries after creating, updating or deleting members automatically.
 
-#### Add a new entry from the context of a module
+#### Create entries on `tl_member` CRUD actions
+
+You can activate the automated creation of privacy protocol entries for the following `tl_member` callbacks:
+
+- `oncreate_callback`
+- `onversion_callback` (this represents updating a member where at least one attribute has actually been changed)
+- `ondelete_callback`
+
+Just open contao's global settings (`tl_settings`) and configure to your needs in the "privacy" section.
+
+#### Create entries programmatically
+
+##### Add a new entry from the context of a module
 
 ```php
 class MyModule {
@@ -66,7 +80,7 @@ class MyModule {
 }
 ```
 
-#### Add a new entry from the context of a content element
+##### Add a new entry from the context of a content element
 
 ```php
 class MyContentElement {
@@ -102,7 +116,7 @@ class MyContentElement {
 }
 ```
 
-#### Add a new entry from a general context
+##### Add a new entry from a general context
 
 ```php
 class MyClass {

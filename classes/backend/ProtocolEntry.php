@@ -16,6 +16,7 @@ class ProtocolEntry extends \Contao\Backend
     const TYPE_SECOND_OPT_IN  = 'second_opt_in';
     const TYPE_FIRST_OPT_OUT  = 'first_opt_out';
     const TYPE_SECOND_OPT_OUT = 'second_opt_out';
+    const TYPE_OPT_OUT        = 'opt_out';
     const TYPE_CREATE         = 'create';
     const TYPE_UPDATE         = 'update';
     const TYPE_DELETE         = 'delete';
@@ -25,6 +26,7 @@ class ProtocolEntry extends \Contao\Backend
         self::TYPE_SECOND_OPT_IN,
         self::TYPE_FIRST_OPT_OUT,
         self::TYPE_SECOND_OPT_OUT,
+        self::TYPE_OPT_OUT,
         self::TYPE_CREATE,
         self::TYPE_UPDATE,
         self::TYPE_DELETE
@@ -32,6 +34,9 @@ class ProtocolEntry extends \Contao\Backend
 
     const CMS_SCOPE_BACKEND  = 'BE';
     const CMS_SCOPE_FRONTEND = 'FE';
+
+    // tl_settings only
+    const CMS_SCOPE_BOTH = 'both';
 
     const CMS_SCOPES = [
         self::CMS_SCOPE_BACKEND,

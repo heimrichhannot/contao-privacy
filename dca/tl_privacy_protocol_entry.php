@@ -194,11 +194,19 @@ $GLOBALS['TL_DCA']['tl_privacy_protocol_entry'] = [
             'inputType' => 'select',
             'options'   => \HeimrichHannot\Privacy\Backend\ProtocolEntry::TYPES,
             'reference' => &$GLOBALS['TL_LANG']['tl_privacy_protocol_entry']['reference'],
-            'eval'      => ['tl_class' => 'w50', 'mandatory' => true, 'includeBlankOption' => true],
+            'eval'      => ['tl_class' => 'w50', 'mandatory' => true, 'includeBlankOption' => true, 'chosen' => true],
             'sql'       => "varchar(32) NOT NULL default ''"
         ],
         'description'             => [
             'label'     => &$GLOBALS['TL_LANG']['tl_privacy_protocol_entry']['description'],
+            'exclude'   => true,
+            'search'    => true,
+            'inputType' => 'textarea',
+            'eval'      => ['tl_class' => 'long clr'],
+            'sql'       => "text NULL"
+        ],
+        'additionalData'             => [
+            'label'     => &$GLOBALS['TL_LANG']['tl_privacy_protocol_entry']['additionalData'],
             'exclude'   => true,
             'search'    => true,
             'inputType' => 'textarea',

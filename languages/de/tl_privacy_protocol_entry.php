@@ -29,26 +29,28 @@ $lang['user'][0]                 = 'Benutzer';
 $lang['user'][1]                 = 'In diesem Feld wird die ID des Benutzers gespeichert.';
 
 // interaction
-$lang['url'][0]           = 'URL';
-$lang['url'][1]           = 'In diesem Feld wird die URL gespeichert, unter der die Interaktion stattgefunden hat.';
-$lang['cmsScope'][0]      = 'CMS-Modus';
-$lang['cmsScope'][1]      = 'In diesem Feld wird gespeichert, ob die Interaktion im Frontend oder im Backend stattgefunden hat.';
-$lang['bundle'][0]        = 'Bundle';
-$lang['bundle'][1]        = 'In diesem Feld wird gespeichert, in welchem Bundle die Interaktion stattgefunden hat.';
-$lang['bundleVersion'][0] = 'Bundle-Version';
-$lang['bundleVersion'][1] = 'In diesem Feld wird die Version des Bundles gespeichert.';
-$lang['description'][0]   = 'Beschreibung';
-$lang['description'][1]   = 'In diesem Feld wird eine Beschreibung gespeichert.';
-$lang['module'][0]        = 'Modul';
-$lang['module'][1]        = 'In diesem Feld wird die ID des Moduls gespeichert.';
-$lang['moduleName'][0]    = 'Modulname';
-$lang['moduleName'][1]    = 'In diesem Feld wird der Name des Moduls gespeichert.';
-$lang['moduleType'][0]    = 'Modultyp';
-$lang['moduleType'][1]    = 'In diesem Feld wird der Typ des Moduls gespeichert.';
-$lang['element'][0]       = 'Inhaltselement';
-$lang['element'][1]       = 'In diesem Feld wird die ID des Inhaltselements gespeichert.';
-$lang['elementType'][0]   = 'Inhaltselementtyp';
-$lang['elementType'][1]   = 'In diesem Feld wird der Typ des Inhaltselements gespeichert.';
+$lang['url'][0]            = 'URL';
+$lang['url'][1]            = 'In diesem Feld wird die URL gespeichert, unter der die Interaktion stattgefunden hat.';
+$lang['cmsScope'][0]       = 'CMS-Modus';
+$lang['cmsScope'][1]       = 'In diesem Feld wird gespeichert, ob die Interaktion im Frontend oder im Backend stattgefunden hat.';
+$lang['bundle'][0]         = 'Bundle';
+$lang['bundle'][1]         = 'In diesem Feld wird gespeichert, in welchem Bundle die Interaktion stattgefunden hat.';
+$lang['bundleVersion'][0]  = 'Bundle-Version';
+$lang['bundleVersion'][1]  = 'In diesem Feld wird die Version des Bundles gespeichert.';
+$lang['description'][0]    = 'Beschreibung';
+$lang['description'][1]    = 'In diesem Feld wird eine Beschreibung gespeichert.';
+$lang['additionalData'][0] = 'Zusätzliche Daten';
+$lang['additionalData'][1] = 'In diesem Feld werden kontextabhängige zusätzliche Daten gespeichert.';
+$lang['module'][0]         = 'Modul';
+$lang['module'][1]         = 'In diesem Feld wird die ID des Moduls gespeichert.';
+$lang['moduleName'][0]     = 'Modulname';
+$lang['moduleName'][1]     = 'In diesem Feld wird der Name des Moduls gespeichert.';
+$lang['moduleType'][0]     = 'Modultyp';
+$lang['moduleType'][1]     = 'In diesem Feld wird der Typ des Moduls gespeichert.';
+$lang['element'][0]        = 'Inhaltselement';
+$lang['element'][1]        = 'In diesem Feld wird die ID des Inhaltselements gespeichert.';
+$lang['elementType'][0]    = 'Inhaltselementtyp';
+$lang['elementType'][1]    = 'In diesem Feld wird der Typ des Inhaltselements gespeichert.';
 
 // code
 $lang['codeFile'][0]       = 'Datei';
@@ -68,11 +70,13 @@ $lang['reference'] = [
     \HeimrichHannot\Privacy\Backend\ProtocolEntry::TYPE_SECOND_OPT_IN  => 'Zweites Opt-In',
     \HeimrichHannot\Privacy\Backend\ProtocolEntry::TYPE_FIRST_OPT_OUT  => 'Erstes Opt-Out',
     \HeimrichHannot\Privacy\Backend\ProtocolEntry::TYPE_SECOND_OPT_OUT => 'Zweites Opt-Out',
+    \HeimrichHannot\Privacy\Backend\ProtocolEntry::TYPE_OPT_OUT        => 'Opt-Out',
     \HeimrichHannot\Privacy\Backend\ProtocolEntry::TYPE_CREATE         => 'Datensatz erstellt',
     \HeimrichHannot\Privacy\Backend\ProtocolEntry::TYPE_UPDATE         => 'Datensatz bearbeitet',
     \HeimrichHannot\Privacy\Backend\ProtocolEntry::TYPE_DELETE         => 'Datensatz gelöscht',
     \HeimrichHannot\Privacy\Backend\ProtocolEntry::CMS_SCOPE_BACKEND   => 'Backend',
-    \HeimrichHannot\Privacy\Backend\ProtocolEntry::CMS_SCOPE_FRONTEND  => 'Frontend'
+    \HeimrichHannot\Privacy\Backend\ProtocolEntry::CMS_SCOPE_FRONTEND  => 'Frontend',
+    \HeimrichHannot\Privacy\Backend\ProtocolEntry::CMS_SCOPE_BOTH      => 'Beide'
 ];
 
 /**

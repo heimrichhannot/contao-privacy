@@ -9,7 +9,8 @@ array_insert(
     [
         'privacy' => [
             'protocols' => [
-                'tables' => ['tl_privacy_protocol_archive', 'tl_privacy_protocol_entry']
+                'tables' => ['tl_privacy_protocol_archive', 'tl_privacy_protocol_entry'],
+                'icon' => 'system/modules/privacy/assets/img/icon_protocol.png'
             ]
         ]
     ]
@@ -29,6 +30,11 @@ if (TL_MODE == 'BE')
  */
 $GLOBALS['TL_MODELS']['tl_privacy_protocol_archive'] = 'HeimrichHannot\Privacy\Model\ProtocolArchiveModel';
 $GLOBALS['TL_MODELS']['tl_privacy_protocol_entry']   = 'HeimrichHannot\Privacy\Model\ProtocolEntryModel';
+
+/**
+ * Hooks
+ */
+$GLOBALS['TL_HOOKS']['loadDataContainer']['initProtocolCallbacks'] = ['HeimrichHannot\Privacy\Manager\ProtocolManager', 'initProtocolCallbacks'];
 
 /**
  * Permissions
