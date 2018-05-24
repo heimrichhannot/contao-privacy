@@ -284,4 +284,56 @@ class ProtocolManager
             }
         }
     }
+
+    public function getSelectorFieldDca()
+    {
+        return [
+            'label'                   => &$GLOBALS['TL_LANG']['MSC']['huhPrivacy']['addPrivacyProtocolEntry'],
+            'exclude'                 => true,
+            'inputType'               => 'checkbox',
+            'eval'                    => ['tl_class' => 'w50 clr', 'submitOnChange' => true],
+            'sql'                     => "char(1) NOT NULL default ''"
+        ];
+    }
+
+    public function getArchiveFieldDca()
+    {
+        return [
+            'label'      => &$GLOBALS['TL_LANG']['MSC']['huhPrivacy']['privacyProtocolEntryArchive'],
+            'exclude'    => true,
+            'filter'     => true,
+            'inputType'  => 'select',
+            'foreignKey' => 'tl_privacy_protocol_archive.title',
+            'eval'       => ['tl_class' => 'w50 clr', 'mandatory' => true, 'includeBlankOption' => true, 'chosen' => true],
+            'sql'        => "int(10) unsigned NOT NULL default '0'"
+        ];
+    }
+
+    public function getTypeFieldDca()
+    {
+        System::loadLanguageFile('tl_privacy_protocol_entry');
+
+        return [
+            'label'     => &$GLOBALS['TL_LANG']['MSC']['huhPrivacy']['privacyProtocolEntryType'],
+            'exclude'   => true,
+            'filter'    => true,
+            'inputType' => 'select',
+            'options'   => \HeimrichHannot\Privacy\Backend\ProtocolEntry::TYPES,
+            'reference' => &$GLOBALS['TL_LANG']['tl_privacy_protocol_entry']['reference'],
+            'eval'      => ['tl_class' => 'w50', 'mandatory' => true, 'includeBlankOption' => true, 'chosen' => true],
+            'sql'       => "varchar(32) NOT NULL default ''"
+        ];
+    }
+
+    public function getDescriptionFieldDca()
+    {
+        return [
+            'label'     => &$GLOBALS['TL_LANG']['MSC']['huhPrivacy']['privacyProtocolEntryDescription'],
+            'exclude'   => true,
+            'search'    => true,
+            'inputType' => 'textarea',
+            'eval'      => ['tl_class' => 'long clr'],
+            'sql'       => "text NULL"
+        ];
+    }
 }
