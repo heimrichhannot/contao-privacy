@@ -67,7 +67,7 @@ $GLOBALS['TL_DCA']['tl_privacy_protocol_entry'] = [
     ],
     'palettes' => [
         '__selector__' => [],
-        'default'      => '{type_date_legend},type,dateAdded;' . '{user_legend},personalDataExplanation,ip,firstname,lastname,email,member,user;'
+        'default'      => '{type_date_legend},type,dateAdded,authorType,author;' . '{user_legend},personalDataExplanation,ip,firstname,lastname,email,member,user;'
                           . '{interaction_legend},url,cmsScope,bundle,bundleVersion,description,module,moduleName,moduleType,element,elementType;'
                           . '{code_legend},codeFile,codeLine,codeFunction,codeStacktrace;'
     ],
@@ -303,3 +303,5 @@ $GLOBALS['TL_DCA']['tl_privacy_protocol_entry'] = [
         ],
     ]
 ];
+
+\HeimrichHannot\Haste\Dca\General::addAuthorFieldAndCallback('tl_privacy_protocol_entry');

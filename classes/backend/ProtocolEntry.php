@@ -147,25 +147,6 @@ class ProtocolEntry extends \Contao\Backend
                     unset($dca['fields'][$field]);
                 }
             }
-
-            // cms mode
-            switch ($protocolEntry->cmsScope)
-            {
-                case static::CMS_SCOPE_FRONTEND:
-                    if (isset($dca['fields']['user']))
-                    {
-                        unset($dca['fields']['user']);
-                    }
-
-                    break;
-                case static::CMS_SCOPE_BACKEND:
-                    if (isset($dca['fields']['member']))
-                    {
-                        unset($dca['fields']['member']);
-                    }
-
-                    break;
-            }
         }
     }
 

@@ -129,11 +129,23 @@ class ProtocolManager
                 case 'cmsScope':
                     if (TL_MODE == 'FE')
                     {
-                        $protocolEntry->cmsScope = ProtocolEntry::CMS_SCOPE_FRONTEND;
+                        $protocolEntry->cmsScope   = ProtocolEntry::CMS_SCOPE_FRONTEND;
+
+                        if (null !== ($member = FrontendUser::getInstance()) && $member->id)
+                        {
+                            $protocolEntry->authorType = General::AUTHOR_TYPE_MEMBER;
+                            $protocolEntry->author     = $member->id;
+                        }
                     }
                     elseif (TL_MODE == 'BE')
                     {
-                        $protocolEntry->cmsScope = ProtocolEntry::CMS_SCOPE_BACKEND;
+                        $protocolEntry->cmsScope   = ProtocolEntry::CMS_SCOPE_BACKEND;
+
+                        if (null !== ($user = BackendUser::getInstance()) && $user->id)
+                        {
+                            $protocolEntry->authorType = General::AUTHOR_TYPE_USER;
+                            $protocolEntry->author     = $user->id;
+                        }
                     }
                     break;
                 case 'url':
@@ -244,7 +256,7 @@ class ProtocolManager
                 $dca['config'][$callback['callback']] = [];
             }
 
-            $createEntryFunc = function($data) use ($callback)  {
+            $createEntryFunc = function ($data) use ($callback) {
                 // restrict to scope
                 if ($callback['cmsScope'] === ProtocolEntry::CMS_SCOPE_BOTH || $callback['cmsScope'] === TL_MODE)
                 {
@@ -255,31 +267,34 @@ class ProtocolManager
             switch ($callback['callback'])
             {
                 case 'oncreate_callback':
-                    $dca['config'][$callback['callback']]['addPrivacyProtocolEntry'] = function($table, $id, $data, DataContainer $dc) use($callback, $createEntryFunc) {
-                        $instance = $dc->activeRecord ?: General::getModelInstance($callback['table'], $id);
+                    $dca['config'][$callback['callback']]['addPrivacyProtocolEntry'] =
+                        function ($table, $id, $data, DataContainer $dc) use ($callback, $createEntryFunc) {
+                            $instance = $dc->activeRecord ?: General::getModelInstance($callback['table'], $id);
 
-                        $entryData = $instance->row();
+                            $entryData = $instance->row();
 
-                        $createEntryFunc($entryData);
-                    };
+                            $createEntryFunc($entryData);
+                        };
                     break;
                 case 'onversion_callback':
-                    $dca['config'][$callback['callback']]['addPrivacyProtocolEntry'] = function($table, $id, DataContainer $dc) use($callback, $createEntryFunc) {
-                        $instance = $dc->activeRecord ?: General::getModelInstance($callback['table'], $id);
+                    $dca['config'][$callback['callback']]['addPrivacyProtocolEntry'] =
+                        function ($table, $id, DataContainer $dc) use ($callback, $createEntryFunc) {
+                            $instance = $dc->activeRecord ?: General::getModelInstance($callback['table'], $id);
 
-                        $entryData = $instance->row();
+                            $entryData = $instance->row();
 
-                        $createEntryFunc($entryData);
-                    };
+                            $createEntryFunc($entryData);
+                        };
                     break;
                 case 'ondelete_callback':
-                    $dca['config'][$callback['callback']]['addPrivacyProtocolEntry'] = function(DataContainer $dc, $id) use($callback, $createEntryFunc) {
-                        $instance = $dc->activeRecord ?: General::getModelInstance($callback['table'], $id);
+                    $dca['config'][$callback['callback']]['addPrivacyProtocolEntry'] =
+                        function (DataContainer $dc, $id) use ($callback, $createEntryFunc) {
+                            $instance = $dc->activeRecord ?: General::getModelInstance($callback['table'], $id);
 
-                        $entryData = $instance->row();
+                            $entryData = $instance->row();
 
-                        $createEntryFunc($entryData);
-                    };
+                            $createEntryFunc($entryData);
+                        };
                     break;
             }
         }
@@ -288,11 +303,11 @@ class ProtocolManager
     public function getSelectorFieldDca()
     {
         return [
-            'label'                   => &$GLOBALS['TL_LANG']['MSC']['huhPrivacy']['addPrivacyProtocolEntry'],
-            'exclude'                 => true,
-            'inputType'               => 'checkbox',
-            'eval'                    => ['tl_class' => 'w50 clr', 'submitOnChange' => true],
-            'sql'                     => "char(1) NOT NULL default ''"
+            'label'     => &$GLOBALS['TL_LANG']['MSC']['huhPrivacy']['addPrivacyProtocolEntry'],
+            'exclude'   => true,
+            'inputType' => 'checkbox',
+            'eval'      => ['tl_class' => 'w50 clr', 'submitOnChange' => true],
+            'sql'       => "char(1) NOT NULL default ''"
         ];
     }
 
