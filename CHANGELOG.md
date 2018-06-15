@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.1.2] - 2018-06-15
+
+### Added
+
+- type to skipFields for protocol
+
 ## [1.1.1] - 2018-06-15
 
 ### Changed

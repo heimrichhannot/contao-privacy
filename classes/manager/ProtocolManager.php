@@ -51,7 +51,7 @@ class ProtocolManager
         $this->addEntry($type, $archive, $data, $packageName);
     }
 
-    public function addEntry($type, $archive, array $data, $packageName = '', $skipFields = ['id', 'tstamp', 'dateAdded', 'pid'])
+    public function addEntry($type, $archive, array $data, $packageName = '', $skipFields = ['id', 'tstamp', 'dateAdded', 'pid', 'type'])
     {
         if (($protocolArchive = ProtocolArchiveModel::findByPk($archive)) === null)
         {
