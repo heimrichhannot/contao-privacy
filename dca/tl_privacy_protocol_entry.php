@@ -90,7 +90,7 @@ $GLOBALS['TL_DCA']['tl_privacy_protocol_entry'] = [
             'sorting'   => true,
             'flag'      => 7,
             'inputType' => 'text',
-            'eval'      => ['rgxp' => 'datim', 'datepicker' => true, 'timepicker' => true, 'doNotCopy' => true, 'mandatory' => true],
+            'eval'      => ['rgxp' => 'datim', 'datepicker' => true, 'timepicker' => true, 'doNotCopy' => true, 'mandatory' => true, 'tl_class' => 'w50'],
             'sql'       => "varchar(64) NOT NULL default ''"
         ],
         // user
@@ -298,7 +298,7 @@ $GLOBALS['TL_DCA']['tl_privacy_protocol_entry'] = [
             'exclude'   => true,
             'search'    => true,
             'inputType' => 'textarea',
-            'eval'      => ['class' => 'clr monospace', 'rte' => 'ace', 'codeField' => true],
+            'eval'      => ['class' => 'monospace', 'tl_class' => 'clr', 'rte' => 'ace', 'codeField' => true],
             'sql'       => "text NULL"
         ],
     ]

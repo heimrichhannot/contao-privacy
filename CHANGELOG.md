@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.1.3] - 2018-06-22
+
+### Fixed
+
+- protocol member and user inconsistencies
+- dca issues
+
 ## [1.1.2] - 2018-06-15
 
 ### Added

@@ -114,18 +114,6 @@ class ProtocolManager
                         $protocolEntry->ip = System::anonymizeIp(Environment::get('ip'));
                     }
                     break;
-                case 'member':
-                    if (TL_MODE == 'FE' && FE_USER_LOGGED_IN)
-                    {
-                        $protocolEntry->member = FrontendUser::getInstance()->id;
-                    }
-                    break;
-                case 'user':
-                    if (TL_MODE == 'BE' && BE_USER_LOGGED_IN)
-                    {
-                        $protocolEntry->user = BackendUser::getInstance()->id;
-                    }
-                    break;
                 case 'cmsScope':
                     if (TL_MODE == 'FE')
                     {

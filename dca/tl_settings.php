@@ -26,7 +26,7 @@ $fields = [
                         'label'            => &$GLOBALS['TL_LANG']['tl_settings']['privacyProtocolTable'],
                         'inputType'        => 'select',
                         'options_callback' => ['HeimrichHannot\Haste\Dca\General', 'getDataContainers'],
-                        'eval'             => ['mandatory' => true, 'includeBlankOption' => true, 'style' => 'width: 180px'],
+                        'eval'             => ['mandatory' => true, 'includeBlankOption' => true, 'style' => 'width: 180px', 'chosen' => true],
                     ],
                     'callback' => [
                         'label'     => &$GLOBALS['TL_LANG']['tl_settings']['privacyProtocolCallback'],
@@ -34,7 +34,7 @@ $fields = [
                         'options'   => ['oncreate_callback', 'onversion_callback', 'ondelete_callback'],
                         'eval'      => ['mandatory' => true, 'includeBlankOption' => true, 'style' => 'width: 140px'],
                     ],
-                    'cmsScope'      => [
+                    'cmsScope' => [
                         'label'     => &$GLOBALS['TL_LANG']['tl_privacy_protocol_entry']['cmsScope'],
                         'inputType' => 'select',
                         'options'   => array_merge(
@@ -64,12 +64,10 @@ $fields = [
                 'minRowCount' => 0,
                 'fields'      => [
                     'table'         => [
-                        'label'     => &$GLOBALS['TL_LANG']['tl_settings']['privacyProtocolTable'],
-                        'inputType' => 'text',
-                        'eval'      => [
-                            'mandatory' => true,
-                            'style'     => 'width: 250px'
-                        ],
+                        'label'            => &$GLOBALS['TL_LANG']['tl_settings']['privacyProtocolTable'],
+                        'inputType'        => 'select',
+                        'options_callback' => ['HeimrichHannot\Haste\Dca\General', 'getDataContainers'],
+                        'eval'             => ['mandatory' => true, 'includeBlankOption' => true, 'style' => 'width: 250px', 'chosen' => true],
                     ],
                     'entityField'   => [
                         'label'     => &$GLOBALS['TL_LANG']['tl_settings']['privacyProtocolEntityField'],
