@@ -1,6 +1,14 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.2.0] - 2018-06-26
+
+### Added
+
+- ModuleProtocolEntryEditor for opt-in and opt-out
+- academicTitle and gender for protocol
+- backend form for sending opt-in emails
+
 ## [1.1.3] - 2018-06-22
 
 ### Fixed

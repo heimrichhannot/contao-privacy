@@ -3,7 +3,9 @@
 namespace HeimrichHannot\Privacy\Backend;
 
 use Contao\Controller;
+use Contao\Database;
 use Contao\DataContainer;
+use Contao\System;
 use HeimrichHannot\Haste\Dca\DC_HastePlus;
 use HeimrichHannot\Haste\Dca\General;
 use HeimrichHannot\Haste\Util\FormSubmission;
@@ -148,6 +150,57 @@ class ProtocolEntry extends \Contao\Backend
                 }
             }
         }
+    }
+
+    public static function addPersonalPrivacyProtocolFieldsToDca($table)
+    {
+        if (!Database::getInstance()->tableExists('tl_privacy_protocol_entry'))
+        {
+            return;
+        }
+
+        Controller::loadDataContainer('tl_privacy_protocol_entry');
+        System::loadLanguageFile('tl_privacy_protocol_entry');
+
+        Controller::loadDataContainer($table);
+        System::loadLanguageFile($table);
+
+        $dca = &$GLOBALS['TL_DCA'][$table];
+
+        foreach ($GLOBALS['TL_DCA']['tl_privacy_protocol_entry']['fields'] as $field => $data)
+        {
+            if (!isset($data['eval']['personalField']) || !$data['eval']['personalField'])
+            {
+                continue;
+            }
+
+            $dca['fields'][$field] = $data;
+        }
+    }
+
+    public static function getPersonalFieldsPalette()
+    {
+        if (!Database::getInstance()->tableExists('tl_privacy_protocol_entry'))
+        {
+            return '';
+        }
+
+        Controller::loadDataContainer('tl_privacy_protocol_entry');
+        System::loadLanguageFile('tl_privacy_protocol_entry');
+
+        $paletteFields = [];
+
+        foreach ($GLOBALS['TL_DCA']['tl_privacy_protocol_entry']['fields'] as $field => $data)
+        {
+            if (!isset($data['eval']['personalField']) || !$data['eval']['personalField'])
+            {
+                continue;
+            }
+
+            $paletteFields[] = $field;
+        }
+
+        return implode(',', $paletteFields);
     }
 
     public function checkPermission()

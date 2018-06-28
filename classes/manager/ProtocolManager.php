@@ -11,6 +11,7 @@ use Contao\DataContainer;
 use Contao\DcaExtractor;
 use Contao\Environment;
 use Contao\FrontendUser;
+use Contao\Model;
 use Contao\Module;
 use Contao\ModuleModel;
 use Contao\System;
@@ -22,9 +23,6 @@ use HeimrichHannot\Privacy\Model\ProtocolEntryModel;
 
 class ProtocolManager
 {
-    protected static $callbacks;
-    protected static $setCallbacks = [];
-
     public function addEntryFromContentElement($type, $archive, array $data, ContentElement $element, $packageName = '')
     {
         $data['element']     = $element->id;
@@ -148,7 +146,19 @@ class ProtocolManager
                         continue 2;
                     }
 
-                    $composerLock = file_get_contents(TL_ROOT . '/composer/composer.lock');
+                    $path = TL_ROOT . '/composer/composer.lock';
+
+                    if (!file_exists($path))
+                    {
+                        $path = TL_ROOT . '/composer.lock';
+                    }
+
+                    if (!file_exists($path))
+                    {
+                        continue 2;
+                    }
+
+                    $composerLock = file_get_contents($path);
 
                     if (!$composerLock)
                     {
@@ -208,90 +218,58 @@ class ProtocolManager
 
         $protocolEntry->save();
 
-        return $protocolEntry;
-    }
-
-    public function initProtocolCallbacks($table)
-    {
-        if (static::$callbacks === null)
+        // set reference field
+        if ($protocolArchive->setReferenceFieldOnChange)
         {
-            static::$callbacks = deserialize(Config::get('privacyProtocolCallbacks'), true);
+            $modelClass = Model::getClassFromTable($protocolArchive->referenceFieldTable);
 
-            foreach (static::$callbacks as $callback)
+            if (class_exists($modelClass))
             {
-                static::$setCallbacks[] = $callback['table'];
-            }
-        }
+                $instance = $modelClass::findBy([$protocolArchive->referenceFieldProtocolForeignKey . '=?'], [$protocolEntry->{$protocolArchive->referenceFieldForeignKey}]);
 
-        $callbacks = static::$callbacks;
-
-        if (!in_array($table, static::$setCallbacks))
-        {
-            return;
-        }
-
-        foreach ($callbacks as $callback)
-        {
-            if ($table !== $callback['table'])
-            {
-                continue;
-            }
-
-            $dca = &$GLOBALS['TL_DCA'][$callback['table']];
-
-            if (!isset($dca['config'][$callback['callback']]))
-            {
-                $dca['config'][$callback['callback']] = [];
-            }
-
-            $createEntryFunc = function ($data) use ($callback) {
-                // restrict to scope
-                if ($callback['cmsScope'] === ProtocolEntry::CMS_SCOPE_BOTH || $callback['cmsScope'] === TL_MODE)
+                if (null === $instance && $protocolArchive->createInstanceOnChange)
                 {
-                    $this->addEntry($callback['type'], $callback['archive'], $data);
+                    $instance = new $modelClass();
+                    $instance->tstamp = $instance->dateAdded = time();
+
+                    foreach ($data as $field => $value)
+                    {
+                        $instance->{$field} = $value;
+                    }
+
+                    if (isset($GLOBALS['TL_HOOKS']['privacy_initReferenceModelOnProtocolChange']) && \is_array($GLOBALS['TL_HOOKS']['privacy_initReferenceModelOnProtocolChange']))
+                    {
+                        foreach ($GLOBALS['TL_HOOKS']['privacy_initReferenceModelOnProtocolChange'] as $callback)
+                        {
+                            if (\is_array($callback))
+                            {
+                                $this->import($callback[0]);
+                                $this->{$callback[0]}->{$callback[1]}($instance, $protocolEntry, $data);
+                            }
+                            elseif (\is_callable($callback))
+                            {
+                                $callback($instance, $protocolEntry, $data);
+                            }
+                        }
+                    }
                 }
-            };
 
-            switch ($callback['callback'])
-            {
-                case 'oncreate_callback':
-                    $dca['config'][$callback['callback']]['addPrivacyProtocolEntry'] =
-                        function ($table, $id, $data, DataContainer $dc) use ($callback, $createEntryFunc) {
-                            $instance = $dc->activeRecord ?: General::getModelInstance($callback['table'], $id);
+                if (null !== $instance)
+                {
+                    $instance->{$protocolArchive->referenceField} = $protocolEntry->type;
 
-                            $entryData = $instance->row();
-
-                            $createEntryFunc($entryData);
-                        };
-                    break;
-                case 'onversion_callback':
-                    $dca['config'][$callback['callback']]['addPrivacyProtocolEntry'] =
-                        function ($table, $id, DataContainer $dc) use ($callback, $createEntryFunc) {
-                            $instance = $dc->activeRecord ?: General::getModelInstance($callback['table'], $id);
-
-                            $entryData = $instance->row();
-
-                            $createEntryFunc($entryData);
-                        };
-                    break;
-                case 'ondelete_callback':
-                    $dca['config'][$callback['callback']]['addPrivacyProtocolEntry'] =
-                        function (DataContainer $dc, $id) use ($callback, $createEntryFunc) {
-                            $instance = $dc->activeRecord ?: General::getModelInstance($callback['table'], $id);
-
-                            $entryData = $instance->row();
-
-                            $createEntryFunc($entryData);
-                        };
-                    break;
+                    $instance->save();
+                }
             }
         }
+
+        return $protocolEntry;
     }
 
     public function getSelectorFieldDca()
     {
         return [
-            'label'     => &$GLOBALS['TL_LANG']['MSC']['huhPrivacy']['addPrivacyProtocolEntry'],
+            'label'     => $GLOBALS['TL_LANG']['MSC']['huhPrivacy']['addPrivacyProtocolEntry'],
             'exclude'   => true,
             'inputType' => 'checkbox',
             'eval'      => ['tl_class' => 'w50 clr', 'submitOnChange' => true],
@@ -302,7 +280,7 @@ class ProtocolManager
     public function getArchiveFieldDca()
     {
         return [
-            'label'      => &$GLOBALS['TL_LANG']['MSC']['huhPrivacy']['privacyProtocolEntryArchive'],
+            'label'      => $GLOBALS['TL_LANG']['MSC']['huhPrivacy']['privacyProtocolEntryArchive'],
             'exclude'    => true,
             'filter'     => true,
             'inputType'  => 'select',
@@ -317,7 +295,7 @@ class ProtocolManager
         System::loadLanguageFile('tl_privacy_protocol_entry');
 
         return [
-            'label'     => &$GLOBALS['TL_LANG']['MSC']['huhPrivacy']['privacyProtocolEntryType'],
+            'label'     => $GLOBALS['TL_LANG']['MSC']['huhPrivacy']['privacyProtocolEntryType'],
             'exclude'   => true,
             'filter'    => true,
             'inputType' => 'select',
@@ -331,12 +309,62 @@ class ProtocolManager
     public function getDescriptionFieldDca()
     {
         return [
-            'label'     => &$GLOBALS['TL_LANG']['MSC']['huhPrivacy']['privacyProtocolEntryDescription'],
+            'label'     => $GLOBALS['TL_LANG']['MSC']['huhPrivacy']['privacyProtocolEntryDescription'],
             'exclude'   => true,
             'search'    => true,
             'inputType' => 'textarea',
             'eval'      => ['tl_class' => 'long clr'],
             'sql'       => "text NULL"
+        ];
+    }
+
+    public function getFieldMappingFieldDca($tableField)
+    {
+        return [
+            'label'     => $GLOBALS['TL_LANG']['MSC']['huhPrivacy']['privacyProtocolFieldMapping'],
+            'inputType' => 'multiColumnEditor',
+            'eval'      => [
+                'tl_class'          => 'long clr',
+                'multiColumnEditor' => [
+                    'minRowCount' => 0,
+                    'fields'      => [
+                        'entityField'   => [
+                            'label'            => &$GLOBALS['TL_LANG']['MSC']['huhPrivacy']['privacyProtocolFieldMapping_entityField'],
+                            'inputType'        => 'select',
+                            'options_callback' => function(DataContainer $dc) use ($tableField) {
+                                if (!$dc->activeRecord->{$tableField})
+                                {
+                                    return [];
+                                }
+
+                                return General::getFields($dc->activeRecord->{$tableField}, false);
+                            },
+                            'exclude'          => true,
+                            'eval'             => [
+                                'includeBlankOption' => true,
+                                'chosen'             => true,
+                                'tl_class'           => 'w50',
+                                'mandatory'          => true,
+                                'style'              => 'width: 400px'
+                            ],
+                        ],
+                        'protocolField' => [
+                            'label'            => &$GLOBALS['TL_LANG']['MSC']['huhPrivacy']['privacyProtocolFieldMapping_protocolField'],
+                            'inputType'        => 'select',
+                            'options_callback' => ['HeimrichHannot\Privacy\Backend\ProtocolEntry', 'getFieldsAsOptions'],
+                            'exclude'          => true,
+                            'eval'             => [
+                                'includeBlankOption' => true,
+                                'chosen'             => true,
+                                'tl_class'           => 'w50',
+                                'mandatory'          => true,
+                                'style'              => 'width: 400px'
+                            ],
+                        ]
+                    ],
+                ],
+            ],
+            'sql'       => "blob NULL",
         ];
     }
 }

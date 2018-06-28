@@ -33,7 +33,17 @@ $GLOBALS['TL_DCA']['tl_privacy_protocol_entry'] = [
             'child_record_callback' => ['HeimrichHannot\Privacy\Backend\ProtocolEntry', 'listChildren']
         ],
         'global_operations' => [
-            'all' => [
+            'export_csv' => \HeimrichHannot\Exporter\ModuleExporter::getGlobalOperation(
+                'export_csv',
+                $GLOBALS['TL_LANG']['MSC']['export_csv'],
+                'system/modules/exporter/assets/img/icon_export.png'
+            ),
+            'export_xls' => \HeimrichHannot\Exporter\ModuleExporter::getGlobalOperation(
+                'export_xls',
+                $GLOBALS['TL_LANG']['MSC']['export_xls'],
+                'system/modules/exporter/assets/img/icon_export.png'
+            ),
+            'all'        => [
                 'label'      => &$GLOBALS['TL_LANG']['MSC']['all'],
                 'href'       => 'act=select',
                 'class'      => 'header_edit_all',
@@ -56,7 +66,7 @@ $GLOBALS['TL_DCA']['tl_privacy_protocol_entry'] = [
                 'href'       => 'act=delete',
                 'icon'       => 'delete.gif',
                 'attributes' => 'onclick="if(!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm']
-                                . '\'))return false;Backend.getScrollOffset()"'
+                    . '\'))return false;Backend.getScrollOffset()"'
             ],
             'show'   => [
                 'label' => &$GLOBALS['TL_LANG']['tl_privacy_protocol_entry']['show'],
@@ -67,9 +77,9 @@ $GLOBALS['TL_DCA']['tl_privacy_protocol_entry'] = [
     ],
     'palettes' => [
         '__selector__' => [],
-        'default'      => '{type_date_legend},type,dateAdded,authorType,author;' . '{user_legend},personalDataExplanation,ip,firstname,lastname,email,member,user;'
-                          . '{interaction_legend},url,cmsScope,bundle,bundleVersion,description,module,moduleName,moduleType,element,elementType;'
-                          . '{code_legend},codeFile,codeLine,codeFunction,codeStacktrace;'
+        'default'      => '{type_date_legend},type,dateAdded,authorType,author;' . '{user_legend},personalDataExplanation,ip,gender,academicTitle,firstname,lastname,email,member,user;'
+            . '{interaction_legend},url,cmsScope,bundle,bundleVersion,table,description,module,moduleName,moduleType,element,elementType;'
+            . '{code_legend},codeFile,codeLine,codeFunction,codeStacktrace;'
     ],
     'fields'   => [
         'id'                      => [
@@ -82,7 +92,8 @@ $GLOBALS['TL_DCA']['tl_privacy_protocol_entry'] = [
         ],
         'tstamp'                  => [
             'label' => &$GLOBALS['TL_LANG']['tl_privacy_protocol_entry']['tstamp'],
-            'sql'   => "int(10) unsigned NOT NULL default '0'"
+            'eval'  => ['rgxp' => 'datim'],
+            'sql'   => "varchar(64) NOT NULL default ''"
         ],
         // date and time
         'dateAdded'               => [
@@ -109,6 +120,24 @@ $GLOBALS['TL_DCA']['tl_privacy_protocol_entry'] = [
             'inputType' => 'text',
             'eval'      => ['maxlength' => 64, 'tl_class' => 'w50', 'personalField' => true],
             'sql'       => "varchar(64) NOT NULL default ''"
+        ],
+        'academicTitle'           => [
+            'label'     => &$GLOBALS['TL_LANG']['tl_privacy_protocol_entry']['academicTitle'],
+            'exclude'   => true,
+            'search'    => true,
+            'inputType' => 'text',
+            'eval'      => ['maxlength' => 64, 'tl_class' => 'w50', 'personalField' => true],
+            'sql'       => "varchar(64) NOT NULL default ''"
+        ],
+        'gender'                  => [
+            'label'     => &$GLOBALS['TL_LANG']['tl_privacy_protocol_entry']['gender'],
+            'exclude'   => true,
+            'filter'    => true,
+            'inputType' => 'select',
+            'options'   => ['male', 'female'],
+            'reference' => &$GLOBALS['TL_LANG']['MSC']['huhPrivacy']['reference'],
+            'eval'      => ['tl_class' => 'w50', 'includeBlankOption' => true, 'personalField' => true],
+            'sql'       => "varchar(16) NOT NULL default ''"
         ],
         'firstname'               => [
             'label'     => &$GLOBALS['TL_LANG']['tl_privacy_protocol_entry']['firstname'],
@@ -187,6 +216,15 @@ $GLOBALS['TL_DCA']['tl_privacy_protocol_entry'] = [
             'eval'      => ['maxlength' => 32, 'tl_class' => 'w50'],
             'sql'       => "varchar(32) NOT NULL default ''"
         ],
+        'table'                   => [
+            'label'            => &$GLOBALS['TL_LANG']['tl_privacy_protocol_entry']['table'],
+            'exclude'          => true,
+            'filter'           => true,
+            'inputType'        => 'select',
+            'options_callback' => ['HeimrichHannot\Haste\Dca\General', 'getDataContainers'],
+            'eval'             => ['tl_class' => 'w50', 'includeBlankOption' => true, 'chosen' => true],
+            'sql'              => "varchar(64) NOT NULL default ''"
+        ],
         'type'                    => [
             'label'     => &$GLOBALS['TL_LANG']['tl_privacy_protocol_entry']['type'],
             'exclude'   => true,
@@ -205,7 +243,7 @@ $GLOBALS['TL_DCA']['tl_privacy_protocol_entry'] = [
             'eval'      => ['tl_class' => 'long clr'],
             'sql'       => "text NULL"
         ],
-        'additionalData'             => [
+        'additionalData'          => [
             'label'     => &$GLOBALS['TL_LANG']['tl_privacy_protocol_entry']['additionalData'],
             'exclude'   => true,
             'search'    => true,
@@ -269,7 +307,7 @@ $GLOBALS['TL_DCA']['tl_privacy_protocol_entry'] = [
             'eval'      => ['maxlength' => 64, 'tl_class' => 'w50'],
             'sql'       => "varchar(64) NOT NULL default ''"
         ],
-        'codeFile'              => [
+        'codeFile'                => [
             'label'     => &$GLOBALS['TL_LANG']['tl_privacy_protocol_entry']['codeFile'],
             'exclude'   => true,
             'search'    => true,
@@ -277,7 +315,7 @@ $GLOBALS['TL_DCA']['tl_privacy_protocol_entry'] = [
             'eval'      => ['tl_class' => 'w50', 'codeField' => true],
             'sql'       => "text NULL"
         ],
-        'codeLine'              => [
+        'codeLine'                => [
             'label'     => &$GLOBALS['TL_LANG']['tl_privacy_protocol_entry']['codeLine'],
             'exclude'   => true,
             'search'    => true,
@@ -285,7 +323,7 @@ $GLOBALS['TL_DCA']['tl_privacy_protocol_entry'] = [
             'eval'      => ['maxlength' => 32, 'tl_class' => 'w50', 'codeField' => true],
             'sql'       => "varchar(32) NOT NULL default ''"
         ],
-        'codeFunction'          => [
+        'codeFunction'            => [
             'label'     => &$GLOBALS['TL_LANG']['tl_privacy_protocol_entry']['codeFunction'],
             'exclude'   => true,
             'search'    => true,
@@ -293,7 +331,7 @@ $GLOBALS['TL_DCA']['tl_privacy_protocol_entry'] = [
             'eval'      => ['maxlength' => 128, 'tl_class' => 'w50', 'codeField' => true],
             'sql'       => "varchar(128) NOT NULL default ''"
         ],
-        'codeStacktrace'        => [
+        'codeStacktrace'          => [
             'label'     => &$GLOBALS['TL_LANG']['tl_privacy_protocol_entry']['codeStacktrace'],
             'exclude'   => true,
             'search'    => true,

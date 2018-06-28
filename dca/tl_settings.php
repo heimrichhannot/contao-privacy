@@ -1,14 +1,11 @@
 <?php
 
-\Contao\Controller::loadDataContainer('tl_privacy_protocol_entry');
-\Contao\System::loadLanguageFile('tl_privacy_protocol_entry');
-
 $dca = &$GLOBALS['TL_DCA']['tl_settings'];
 
 /**
  * Palettes
  */
-$dca['palettes']['default'] .= ';{privacy_legend},privacyProtocolCallbacks,privacyProtocolFieldMapping;';
+$dca['palettes']['default'] .= ';{privacy_legend},privacyProtocolCallbacks,privacyProtocolFieldMapping,privacyOptInNotification,privacyOptInJumpTo;';
 
 /**
  * Fields
@@ -93,6 +90,23 @@ $fields = [
                 ],
             ],
         ],
+    ],
+    'privacyOptInNotification'           => [
+        'label'            => &$GLOBALS['TL_LANG']['tl_settings']['privacyOptInNotification'],
+        'exclude'          => true,
+        'search'           => true,
+        'inputType'        => 'select',
+        'options_callback' => ['HeimrichHannot\FormHybrid\Backend\Module', 'getNoficiationMessages'],
+        'eval'             => ['chosen' => true, 'maxlength' => 255, 'tl_class' => 'w50 clr', 'includeBlankOption' => true],
+        'sql'              => "int(10) unsigned NOT NULL default '0'",
+    ],
+    'privacyOptInJumpTo' => [
+        'label'                   => &$GLOBALS['TL_LANG']['tl_settings']['privacyOptInJumpTo'],
+        'exclude'                 => true,
+        'inputType'               => 'pageTree',
+        'foreignKey'              => 'tl_page.title',
+        'eval'                    => ['fieldType'=>'radio', 'tl_class' => 'w50'],
+        'relation'                => ['type'=>'hasOne', 'load'=>'lazy']
     ],
 ];
 
