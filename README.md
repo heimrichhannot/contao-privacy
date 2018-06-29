@@ -26,7 +26,7 @@ Use this bundle at your own risk. Although we as the developer try our best to d
 We already implemented support for some of our bundles:
 
 - [heimrichhannot/contao-formhybrid](https://github.com/heimrichhannot/contao-formhybrid): This bundle offers the functionality to create DCA-powered forms in the frontend including callbacks, input types, email handling, and so on. By installing Contao Privacy Bundle you also get a checkbox for adding protocol entries after form submission.
-- [heimrichhannot/contao-cleaner-bundle](https://github.com/heimrichhannot/contao-cleaner-bundle): This bundle offers the functionality to create DCA-powered forms in the frontend including callbacks, input types, email handling, and so on. By installing Contao Privacy Bundle you also get a checkbox for adding protocol entries after form submission.
+- [heimrichhannot/contao-cleaner-bundle](https://github.com/heimrichhannot/contao-cleaner-bundle): This bundle adds cleaner functionality for periodically removing arbitrary entities and/or files fulfilling a certain condition (using TL_CRON or your server's cron).
 
 ## Usage
 
