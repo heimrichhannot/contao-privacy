@@ -163,6 +163,13 @@ $GLOBALS['TL_DCA']['tl_privacy_protocol_entry'] = [
             'eval'      => ['maxlength' => 128, 'rgxp' => 'email', 'tl_class' => 'w50', 'personalField' => true],
             'sql'       => "varchar(128) NOT NULL default ''"
         ],
+        'agreement' => [
+            'label'                   => &$GLOBALS['TL_LANG']['tl_privacy_protocol_entry']['agreement'],
+            'exclude'                 => true,
+            'inputType'               => 'checkbox',
+            'eval'                    => ['tl_class' => 'w50', 'additionalField' => true],
+            'sql'                     => "char(1) NOT NULL default ''"
+        ],
         'member'                  => [
             'label'            => &$GLOBALS['TL_LANG']['tl_privacy_protocol_entry']['member'],
             'exclude'          => true,

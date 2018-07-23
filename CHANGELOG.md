@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.3.0] - 2018-07-23
+
+### Added
+
+- agreement field
+
 ## [1.2.1] - 2018-06-29
 
 ### Fixed

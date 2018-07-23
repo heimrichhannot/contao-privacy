@@ -45,9 +45,9 @@ class ProtocolEntry extends \Contao\Backend
         self::CMS_SCOPE_FRONTEND
     ];
 
-    public function getPersonalFieldsAsOptions()
+    public function getPersonalFieldsAsOptions($includeAdditionalFields = true)
     {
-        return General::getFields(
+        $fields = General::getFields(
             'tl_privacy_protocol_entry',
             true,
             null,
@@ -55,6 +55,20 @@ class ProtocolEntry extends \Contao\Backend
                 'personalField' => true
             ]
         );
+
+        if ($includeAdditionalFields)
+        {
+            $fields += General::getFields(
+                'tl_privacy_protocol_entry',
+                true,
+                null,
+                [
+                    'additionalField' => true
+                ]
+            );
+        }
+
+        return $fields;
     }
 
     public function getCodeFieldsAsOptions()
