@@ -48,7 +48,7 @@ class HookListener
                 // restrict to scope
                 if ($callback['cmsScope'] === ProtocolEntry::CMS_SCOPE_BOTH || $callback['cmsScope'] === TL_MODE) {
                     $protocolManager = new ProtocolManager();
-                    $protocolManager->addEntry($callback['type'], $callback['archive'], $data);
+                    $protocolManager->addEntry($data['type'], $callback['archive'], $data);
                 }
             };
 
@@ -60,6 +60,7 @@ class HookListener
 
                             $entryData = $instance->row();
                             $entryData['table'] = $callback['table'];
+                            $entryData['type'] = ProtocolEntry::TYPE_CREATE;
 
                             $createEntryFunc($entryData);
                         };
@@ -71,6 +72,7 @@ class HookListener
 
                             $entryData = $instance->row();
                             $entryData['table'] = $callback['table'];
+                            $entryData['type'] = ProtocolEntry::TYPE_UPDATE;
 
                             $createEntryFunc($entryData);
                         };
@@ -82,6 +84,7 @@ class HookListener
 
                             $entryData = $instance->row();
                             $entryData['table'] = $callback['table'];
+                            $entryData['type'] = ProtocolEntry::TYPE_DELETE;
 
                             $createEntryFunc($entryData);
                         };
