@@ -98,7 +98,7 @@ class HookListener
         $tagArray = explode('::', $tag);
 
         switch ($tagArray[0]) {
-            case 'privacy_opt_in_url':
+            case 'privacy_opt_url':
                 $dataString = $tagArray[1];
                 $data = [];
 
@@ -115,7 +115,7 @@ class HookListener
                 }
 
                 $jumpTo              = isset($tagArray[2]) ? $tagArray[2] : null;
-                $url                 = Url::getJumpToPageUrl($jumpTo, true);
+                $url                 = Url::getJumpToPageUrl($jumpTo);
 
                 $token = [
                     'data' => $data,
@@ -123,49 +123,12 @@ class HookListener
 
                 if (isset($tagArray[3]) && $tagArray[3])
                 {
-                    $token['referenceCondition'] = $tagArray[3];
+                    $token['referenceFieldValue'] = $tagArray[3];
                 }
 
                 $jwt = JWT::encode($token, Config::get('encryptionKey'));
 
-                return Url::addQueryString(Privacy::OPT_IN_OUT_ACTION_PARAM . '=optin&' . Privacy::OPT_IN_OUT_TOKEN_PARAM . '=' . $jwt, $url);
-                break;
-            case 'privacy_opt_out_url':
-                $dataString = $tagArray[1];
-                $data = [];
-
-                foreach (explode('#', $dataString) as $fieldValuePairString)
-                {
-                    $fieldValuePair = explode(':', $fieldValuePairString);
-
-                    if (count($fieldValuePair) !== 2)
-                    {
-                        continue;
-                    }
-
-                    $data[$fieldValuePair[0]] = $fieldValuePair[1];
-                }
-
-                $jumpTo              = isset($tagArray[2]) ? $tagArray[2] : null;
-                $url                 = Url::getJumpToPageUrl($jumpTo, true);
-
-                $token = [
-                    'data' => $data,
-                ];
-
-                if (isset($tagArray[3]) && $tagArray[3])
-                {
-                    $token['referenceCondition'] = $tagArray[3];
-                }
-
-                if (isset($tagArray[4]) && $tagArray[4])
-                {
-                    $token['deleteInstance'] = true;
-                }
-
-                $jwt = JWT::encode($token, Config::get('encryptionKey'));
-
-                return Url::addQueryString(Privacy::OPT_IN_OUT_ACTION_PARAM . '=optout&' . Privacy::OPT_IN_OUT_TOKEN_PARAM . '=' . $jwt, $url);
+                return Url::addQueryString(Privacy::OPT_ACTION_PARAM . '=opt&' . Privacy::OPT_IN_OUT_TOKEN_PARAM . '=' . $jwt, $url);
                 break;
         }
 

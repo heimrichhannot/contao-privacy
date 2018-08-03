@@ -16,7 +16,6 @@ $dca = [
             'inputType' => 'select',
             'options'   => System::getLanguages(true),
             'eval'      => [
-                'chosen'             => true,
                 'rgxp'               => 'locale',
                 'tl_class'           => 'w50',
                 'includeBlankOption' => true,

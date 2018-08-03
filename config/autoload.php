@@ -33,6 +33,7 @@ ClassLoader::addClasses([
     'HeimrichHannot\Privacy\Privacy'                          => 'system/modules/privacy/classes/Privacy.php',
     'HeimrichHannot\Privacy\EventListener\HookListener'       => 'system/modules/privacy/classes/event_listener/HookListener.php',
     'HeimrichHannot\Privacy\Form\ProtocolEntryForm'           => 'system/modules/privacy/classes/form/ProtocolEntryForm.php',
+    'HeimrichHannot\Privacy\Util\ProtocolUtil'                => 'system/modules/privacy/classes/util/ProtocolUtil.php',
     'HeimrichHannot\Privacy\Module\ModuleProtocolEntryEditor' => 'system/modules/privacy/modules/ModuleProtocolEntryEditor.php',
     'HeimrichHannot\Privacy\Module\ModuleBackendOptIn'        => 'system/modules/privacy/modules/ModuleBackendOptIn.php',
 ]);

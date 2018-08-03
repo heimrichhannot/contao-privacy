@@ -28,8 +28,15 @@ $lang['optOutFailed']        = 'Die Abmeldung war nicht erfolgreich. Bitte prüf
 $lang['optOutFailedNoToken'] = 'Die Abmeldung war nicht erfolgreich. Kein Abmelde-Token gefunden.';
 $lang['alreadyOptedOut']     = 'Sie sind bereits abgemeldet und erhalten daher keine E-Mails von uns.';
 $lang['confirmOptInEmail']   = 'Möchten Sie wirklich an die eingegebene E-Mail-Adresse eine E-Mail zur Werbeeinwilligung senden? Haben Sie dafür die Einwilligung der Person?';
+$lang['messageNoJwtToken']   = 'Es wurde kein Token gefunden. Haben Sie sich vertippt?';
 
 /**
  * Misc
  */
 $lang['config_legend'] = 'Konfiguration';
+
+/**
+ * Reference
+ */
+$lang['reference']['male'] = 'Männlich';
+$lang['reference']['female'] = 'Weiblich';

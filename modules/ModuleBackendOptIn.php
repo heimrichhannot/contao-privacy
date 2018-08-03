@@ -12,7 +12,6 @@ use HeimrichHannot\Haste\Util\Salutations;
 use HeimrichHannot\Haste\Util\Url;
 use HeimrichHannot\Haste\Util\Widget;
 use HeimrichHannot\NotificationCenterPlus\MessageModel;
-use HeimrichHannot\Privacy\Manager\ProtocolManager;
 use HeimrichHannot\Request\Request;
 
 class ModuleBackendOptIn extends \BackendModule
@@ -51,11 +50,12 @@ class ModuleBackendOptIn extends \BackendModule
 
         // add fields
         $fields = [];
+        $lang = Request::getPost('language') ?: ($GLOBALS['TL_LANGUAGE'] ?: 'de');
 
         foreach ($dca['fields'] as $field => $data) {
             switch ($field) {
                 case 'language':
-                    $widget = Widget::getBackendFormField($field, $data, $GLOBALS['TL_LANGUAGE']);
+                    $widget = Widget::getBackendFormField($field, $data, $lang);
                     break;
                 default:
                     $widget = Widget::getBackendFormField($field, $data);
@@ -74,12 +74,13 @@ class ModuleBackendOptIn extends \BackendModule
     protected function sendEmail()
     {
         $dca = &$GLOBALS['TL_DCA']['tl_privacy_backend'];
+        $lang = Request::getPost('language') ?: ($GLOBALS['TL_LANGUAGE'] ?: 'de');
 
         if (($message = MessageModel::findPublishedById(Config::get('privacyOptInNotification'))) !== null) {
             $jumpTo = Config::get('privacyOptInJumpTo');
             $tokens = [
                 'salutation_submission' => Salutations::createSalutation(
-                    $GLOBALS['TL_LANGUAGE'] ?: 'de',
+                    $lang,
                     $_POST
                 )
             ];
@@ -100,11 +101,11 @@ class ModuleBackendOptIn extends \BackendModule
             $dataString = implode('#', $dataForInsertTag);
 
             $tokens['opt_in_url'] = Controller::replaceInsertTags(
-                "{{privacy_opt_in_url::$dataString::$jumpTo}}",
+                "{{privacy_opt_url::$dataString::$jumpTo}}",
                 false
             );
 
-            $message->send($tokens, $GLOBALS['TL_LANGUAGE']);
+            $message->send($tokens, $lang);
 
             Message::addConfirmation(sprintf($GLOBALS['TL_LANG']['tl_privacy_backend']['emailSentSuccessfully'], $data['email']));
             Controller::redirect(Url::getCurrentUrl());

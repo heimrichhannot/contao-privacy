@@ -7,6 +7,7 @@ use Contao\Config;
 use Contao\Controller;
 use Contao\System;
 use Firebase\JWT\JWT;
+use HeimrichHannot\FormHybrid\FormHelper;
 use HeimrichHannot\Haste\Model\Model;
 use HeimrichHannot\Haste\Util\Url;
 use HeimrichHannot\Privacy\Form\ProtocolEntryForm;
@@ -37,8 +38,25 @@ class ModuleProtocolEntryEditor extends \Module
 
     protected function compile()
     {
-        $this->doOptOut();
-        $this->setDefaultValuesFromToken();
+        $decoded = $this->getDataFromJwtToken();
+
+        if ($this->privacyAutoSubmit)
+        {
+            $formId = FormHelper::getFormId($this->formHybridDataContainer, $this->id);
+
+            if ($this->useCustomFormId)
+            {
+                $formId = $this->customFormId;
+            }
+
+            Request::setPost('FORM_SUBMIT', $formId);
+        }
+
+        if (is_array($decoded))
+        {
+            $this->setDefaultValuesFromToken($decoded);
+            $this->storeJwtDataToSession($decoded);
+        }
 
         $this->formHybridAddPrivacyProtocolEntry = true;
 
@@ -46,10 +64,14 @@ class ModuleProtocolEntryEditor extends \Module
         $this->Template->form = $form->generate();
     }
 
-    protected function setDefaultValuesFromToken()
+    protected function getDataFromJwtToken()
     {
-        if (!($token = Request::getGet(Privacy::OPT_IN_OUT_TOKEN_PARAM)) || 'optin' !== Request::getGet(Privacy::OPT_IN_OUT_ACTION_PARAM)) {
-            return;
+        if (!($token = Request::getGet(Privacy::OPT_IN_OUT_TOKEN_PARAM)) || !Request::getGet(Privacy::OPT_ACTION_PARAM)) {
+            if ($this->privacyRestrictToJwt) {
+                StatusMessage::addError($GLOBALS['TL_LANG']['MSC']['huhPrivacy']['messageNoJwtToken'], $this->id);
+            }
+
+            return false;
         }
 
         try {
@@ -58,9 +80,14 @@ class ModuleProtocolEntryEditor extends \Module
             $decoded['data'] = (array)$decoded['data'];
         } catch (\Exception $e) {
             StatusMessage::addError($GLOBALS['TL_LANG']['MSC']['huhPrivacy']['optInTokenInvalid'], $this->id);
-            return;
+            return false;
         }
 
+        return $decoded;
+    }
+
+    protected function setDefaultValuesFromToken($decoded)
+    {
         if (!isset($decoded['data']) || !is_array($decoded['data'])) {
             return;
         }
@@ -73,89 +100,20 @@ class ModuleProtocolEntryEditor extends \Module
         $dca = &$GLOBALS['TL_DCA'][$table];
 
         foreach ($decoded['data'] as $field => $value) {
-            $dca['fields'][$field]['default'] = $value;
+            if ($this->privacyAutoSubmit)
+            {
+                Request::setPost($field, $value);
+            }
+            else{
+                $dca['fields'][$field]['default'] = $value;
+            }
         }
     }
 
-    protected function doOptOut()
+    protected function storeJwtDataToSession($decoded)
     {
-        if (!$this->privacyAddOptOut) {
-            return;
-        }
+        $session = \Session::getInstance();
 
-        $protocolManager = new ProtocolManager();
-
-        if (!($token = Request::getGet(Privacy::OPT_IN_OUT_TOKEN_PARAM)) || 'optout' !== Request::getGet(Privacy::OPT_IN_OUT_ACTION_PARAM)) {
-            return;
-        }
-
-        try {
-            $decoded         = JWT::decode($token, \Config::get('encryptionKey'), ['HS256']);
-            $decoded         = (array)$decoded;
-            $decoded['data'] = (array)$decoded['data'];
-        } catch (\Exception $e) {
-            StatusMessage::addError($GLOBALS['TL_LANG']['MSC']['huhPrivacy']['optOutFailed'], $this->id);
-            return;
-        }
-
-        $data = $decoded['data'];
-
-        if (isset($decoded['referenceCondition']) && $decoded['referenceCondition']) {
-            $referenceConditionArray = explode(':', $decoded['referenceCondition']);
-
-            if (count($referenceConditionArray) === 3) {
-                $table               = $referenceConditionArray[0];
-                $referenceField      = $referenceConditionArray[1];
-                $referenceFieldValue = $referenceConditionArray[2];
-
-                $data['table'] = $table;
-
-                $modelClass = Model::getClassFromTable($table);
-
-                if (class_exists($modelClass)) {
-                    $model = $modelClass::findOneBy(["$table.$referenceField=?"], [$referenceFieldValue]);
-
-                    if ($table == 'tl_member') {
-                        $data['member'] = $model->id;
-                    }
-
-                    // delete entity
-                    if ($decoded['deleteInstance']) {
-                        $affectedRows = $model->delete();
-
-                        if ($affectedRows > 0 && $this->addOptOutDeletePrivacyProtocolEntry) {
-                            $deleteData = $data;
-
-                            if ($this->optOutDeletePrivacyProtocolDescription) {
-                                $deleteData['description'] = $this->optOutDeletePrivacyProtocolDescription;
-                            }
-
-                            $protocolManager->addEntryFromModule(
-                                $this->optOutDeletePrivacyProtocolEntryType,
-                                $this->optOutDeletePrivacyProtocolArchive,
-                                $deleteData,
-                                $this
-                            );
-                        }
-                    }
-                }
-            }
-        }
-
-        // add privacy protocol entry
-        $data['description'] = $this->optOutPrivacyProtocolDescription;
-
-        $protocolManager->addEntryFromModule(
-            $this->optOutPrivacyProtocolEntryType,
-            $this->optOutPrivacyProtocolArchive,
-            $data,
-            $this
-        );
-
-        if ($this->privacyOptOutJumpTo) {
-            Controller::redirect(Url::getJumpToPageUrl($this->privacyOptOutJumpTo));
-        } else {
-            StatusMessage::addSuccess($GLOBALS['TL_LANG']['MSC']['huhPrivacy']['optOutSuccessful'], $this->id);
-        }
+        $session->set('PRIVACY_DATA_' . $this->id, $decoded);
     }
 }

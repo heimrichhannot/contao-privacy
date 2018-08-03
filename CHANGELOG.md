@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.4.0] - 2018-08-01
+
+### Fixed
+
+- refactored opt module and insert tags
+
 ## [1.3.1] - 2018-07-24
 
 ### Fixed
