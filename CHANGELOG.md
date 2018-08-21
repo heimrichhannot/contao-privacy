@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.5.0] - 2018-08-21
+
+### Fixed
+
+- privacy opt in emails for supporting multiple languages
+
 ## [1.4.0] - 2018-08-01
 
 ### Fixed

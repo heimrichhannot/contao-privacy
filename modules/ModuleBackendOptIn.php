@@ -77,6 +77,10 @@ class ModuleBackendOptIn extends \BackendModule
         $lang = Request::getPost('language') ?: ($GLOBALS['TL_LANGUAGE'] ?: 'de');
 
         if (($message = MessageModel::findPublishedById(Config::get('privacyOptInNotification'))) !== null) {
+            $tmpLang = $GLOBALS['TL_LANGUAGE'];
+
+            $GLOBALS['TL_LANGUAGE'] = $lang;
+
             $jumpTo = Config::get('privacyOptInJumpTo');
             $tokens = [
                 'salutation_submission' => Salutations::createSalutation(
@@ -106,6 +110,8 @@ class ModuleBackendOptIn extends \BackendModule
             );
 
             $message->send($tokens, $lang);
+
+            $GLOBALS['TL_LANGUAGE'] = $tmpLang;
 
             Message::addConfirmation(sprintf($GLOBALS['TL_LANG']['tl_privacy_backend']['emailSentSuccessfully'], $data['email']));
             Controller::redirect(Url::getCurrentUrl());

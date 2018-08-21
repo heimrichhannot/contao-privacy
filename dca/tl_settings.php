@@ -5,7 +5,7 @@ $dca = &$GLOBALS['TL_DCA']['tl_settings'];
 /**
  * Palettes
  */
-$dca['palettes']['default'] .= ';{privacy_legend},privacyProtocolCallbacks,privacyProtocolFieldMapping,privacyOptInNotification,privacyOptInJumpTo;';
+$dca['palettes']['default'] .= ';{privacy_legend},privacyProtocolCallbacks,privacyProtocolFieldMapping,privacyOptInNotifications,privacyOptInJumpTo;';
 
 /**
  * Fields
@@ -32,13 +32,13 @@ $fields = [
                         'eval'      => ['mandatory' => true, 'includeBlankOption' => true, 'style' => 'width: 140px'],
                     ],
                     'cmsScope' => [
-                        'label'     => &$GLOBALS['TL_LANG']['tl_privacy_protocol_entry']['cmsScope'],
+                        'label'     => &$GLOBALS['TL_LANG']['tl_settings']['cmsScope'],
                         'inputType' => 'select',
                         'options'   => array_merge(
                             [\HeimrichHannot\Privacy\Backend\ProtocolEntry::CMS_SCOPE_BOTH],
                             \HeimrichHannot\Privacy\Backend\ProtocolEntry::CMS_SCOPES
                         ),
-                        'reference' => &$GLOBALS['TL_LANG']['tl_privacy_protocol_entry']['reference'],
+                        'reference' => &$GLOBALS['TL_LANG']['tl_settings']['reference']['huhPrivacy'],
                         'eval'      => ['tl_class' => 'w50', 'mandatory' => true, 'includeBlankOption' => true, 'style' => 'width: 75px'],
                     ],
                     'archive'  => [
@@ -91,22 +91,34 @@ $fields = [
             ],
         ],
     ],
-    'privacyOptInNotification'           => [
-        'label'            => &$GLOBALS['TL_LANG']['tl_settings']['privacyOptInNotification'],
-        'exclude'          => true,
-        'search'           => true,
-        'inputType'        => 'select',
-        'options_callback' => ['HeimrichHannot\FormHybrid\Backend\Module', 'getNoficiationMessages'],
-        'eval'             => ['chosen' => true, 'maxlength' => 255, 'tl_class' => 'w50 clr', 'includeBlankOption' => true],
-        'sql'              => "int(10) unsigned NOT NULL default '0'",
-    ],
-    'privacyOptInJumpTo' => [
-        'label'                   => &$GLOBALS['TL_LANG']['tl_settings']['privacyOptInJumpTo'],
-        'exclude'                 => true,
-        'inputType'               => 'pageTree',
-        'foreignKey'              => 'tl_page.title',
-        'eval'                    => ['fieldType'=>'radio', 'tl_class' => 'w50'],
-        'relation'                => ['type'=>'hasOne', 'load'=>'lazy']
+    'privacyOptInNotifications'       => [
+        'label'     => &$GLOBALS['TL_LANG']['tl_settings']['privacyOptInNotifications'],
+        'inputType' => 'multiColumnEditor',
+        'eval'      => [
+            'tl_class' => 'long clr',
+            'multiColumnEditor' => [
+                'minRowCount' => 0,
+                'fields' => [
+                    'privacyOptInNotification'           => [
+                        'label'            => &$GLOBALS['TL_LANG']['tl_settings']['privacyOptInNotification'],
+                        'exclude'          => true,
+                        'search'           => true,
+                        'inputType'        => 'select',
+                        'options_callback' => ['HeimrichHannot\FormHybrid\Backend\Module', 'getNoficiationMessages'],
+                        'eval'             => ['chosen' => true, 'maxlength' => 255, 'tl_class' => 'w50 clr', 'includeBlankOption' => true, 'mandatory' => true]
+                    ],
+                    'privacyOptInJumpTo' => [
+                        'label'                   => &$GLOBALS['TL_LANG']['tl_settings']['privacyOptInJumpTo'],
+                        'exclude'                 => true,
+                        'inputType'               => 'pageTree',
+                        'foreignKey'              => 'tl_page.title',
+                        'eval'                    => ['fieldType'=>'radio', 'tl_class' => 'w50', 'mandatory' => true],
+                        'relation'                => ['type'=>'hasOne', 'load'=>'lazy']
+                    ],
+                ],
+            ],
+        ],
+        'sql'       => "blob NULL",
     ],
 ];
 

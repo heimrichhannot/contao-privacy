@@ -18,8 +18,16 @@ $lang['privacyOptInNotification'][0]    = 'Benachrichtigung (Backend-Opt-In)';
 $lang['privacyOptInNotification'][1]    = 'Wählen Sie hier die Benachrichtigung aus, die bei der Nutzung des Backend-Opt-In-Formulars verschickt werden soll. ';
 $lang['privacyOptInJumpTo'][0]          = 'Weiterleitungsseite (Backend-Opt-In)';
 $lang['privacyOptInJumpTo'][1]          = 'Wählen Sie hier die Seite aus, auf der sich das Modul vom Typ Protokolleintragseditor befindet.';
+$lang['cmsScope'][0]                    = 'CMS-Modus';
+$lang['cmsScope'][1]                    = 'In diesem Feld wird gespeichert, ob die Interaktion im Frontend oder im Backend stattgefunden hat.';
 
 /**
  * Legends
  */
 $lang['privacy_legend'] = 'Datenschutz';
+
+$lang['reference']['huhPrivacy'] = [
+    \HeimrichHannot\Privacy\Backend\ProtocolEntry::CMS_SCOPE_BACKEND   => 'Backend',
+    \HeimrichHannot\Privacy\Backend\ProtocolEntry::CMS_SCOPE_FRONTEND  => 'Frontend',
+    \HeimrichHannot\Privacy\Backend\ProtocolEntry::CMS_SCOPE_BOTH      => 'Beide'
+];
