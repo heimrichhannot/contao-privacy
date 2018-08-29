@@ -13,14 +13,17 @@ array_insert(
                 'icon'     => 'system/modules/privacy/assets/img/icon_email.png',
             ],
             'protocols'      => [
-                'tables'     => ['tl_privacy_protocol_archive', 'tl_privacy_protocol_entry'],
-                'icon'       => 'system/modules/privacy/assets/img/icon_protocol.png',
-                'export_csv' => \HeimrichHannot\Exporter\ModuleExporter::getBackendModule(),
-                'export_xls' => \HeimrichHannot\Exporter\ModuleExporter::getBackendModule()
-            ]
-        ]
+                'tables' => ['tl_privacy_protocol_archive', 'tl_privacy_protocol_entry'],
+                'icon'   => 'system/modules/privacy/assets/img/icon_protocol.png',
+            ],
+        ],
     ]
 );
+
+if (class_exists('HeimrichHannot\Exporter\ModuleExporter')) {
+    $GLOBALS['BE_MOD']['privacy']['protocols']['export_csv'] = \HeimrichHannot\Exporter\ModuleExporter::getBackendModule();
+    $GLOBALS['BE_MOD']['privacy']['protocols']['export_xls'] = \HeimrichHannot\Exporter\ModuleExporter::getBackendModule();
+}
 
 /**
  * Frontend modules

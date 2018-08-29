@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.6.0] - 2018-08-29
+
+### Changed
+- dropped strong `heimrichhannot/contao-exporter` requirement, and suggest `heimrichhannot/contao-exporter` (contao 3) or `heimrichhannot/contao-exporter-bundle` (contao 4)
+
 ## [1.5.0] - 2018-08-21
 
 ### Fixed

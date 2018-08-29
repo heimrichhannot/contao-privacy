@@ -28,6 +28,13 @@ We already implemented support for some of our bundles:
 - [heimrichhannot/contao-formhybrid](https://github.com/heimrichhannot/contao-formhybrid): This bundle offers the functionality to create DCA-powered forms in the frontend including callbacks, input types, email handling, and so on. By installing Contao Privacy Bundle you also get a checkbox for adding protocol entries after form submission.
 - [heimrichhannot/contao-cleaner-bundle](https://github.com/heimrichhannot/contao-cleaner-bundle): This bundle adds cleaner functionality for periodically removing arbitrary entities and/or files fulfilling a certain condition (using TL_CRON or your server's cron).
 
+## Export the privacy protocol
+
+Export entries from the privacy protocol as `csv` or `excel` is already possible. In order to avail this feature, simply install one of the following composer modules:
+
+* for contao 3.x: `composer require heimrichhannot/contao-exporter`
+* for contao 4.x: `composer require heimrichhannot/contao-exporter-bundle`
+
 ## Usage
 
 ### The privacy protocol
