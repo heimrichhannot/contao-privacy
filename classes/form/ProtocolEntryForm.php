@@ -3,7 +3,6 @@
 namespace HeimrichHannot\Privacy\Form;
 
 use HeimrichHannot\FormHybrid\Form;
-use HeimrichHannot\FormHybrid\FormHybrid;
 use HeimrichHannot\Privacy\Manager\ProtocolManager;
 use HeimrichHannot\Privacy\Util\ProtocolUtil;
 
@@ -14,12 +13,12 @@ class ProtocolEntryForm extends Form
 
     public function compile() {}
 
-    protected function afterActivationCallback(\DataContainer $dc, $objModel)
+    protected function afterActivationCallback(\DataContainer $dc, $objModel, $submissionData = null)
     {
-        parent::afterActivationCallback($dc, $objModel);
+        parent::afterActivationCallback($dc, $objModel, $submissionData);
 
-        $this->updateReferenceEntity();
-        $this->deleteReferenceEntity();
+        $this->updateReferenceEntity($submissionData);
+        $this->deleteReferenceEntity($submissionData);
     }
 
     protected function afterSubmitCallback(\DataContainer $dc)
@@ -31,36 +30,31 @@ class ProtocolEntryForm extends Form
         }
     }
 
-    protected function updateReferenceEntity()
+    protected function updateReferenceEntity($submissionData = null)
     {
         if (!$this->objModule->privacyAddReferenceEntity || !$this->objModule->privacyUpdateReferenceEntityFields)
         {
             return;
         }
 
-        $session = \Session::getInstance();
-
-        $decoded = $session->get('PRIVACY_DATA_' . $this->objModule->id);
-
-        if (!is_array($decoded))
-        {
-            return;
-        }
-
         $protocolUtil = new ProtocolUtil();
 
-        $instance = $protocolUtil->findReferenceEntity(
-            $this->objModule->privacyReferenceEntityTable,
-            $this->objModule->privacyReferenceEntityField,
-            $decoded['referenceFieldValue']
-        );
+        $referenceField = $protocolUtil->getMappedPrivacyProtocolField($this->objModule->privacyReferenceEntityField, deserialize($this->objModule->formHybridPrivacyProtocolFieldMapping, true));
+        $instance = null;
+
+        if ($submissionData)
+        {
+            $instance = $protocolUtil->findReferenceEntity(
+                $this->objModule->privacyReferenceEntityTable,
+                $this->objModule->privacyReferenceEntityField,
+                $submissionData->{$referenceField}
+            );
+        }
 
         if (null === $instance)
         {
             return;
         }
-
-        $submission = $this->getSubmission()->row();
 
         foreach (deserialize($this->objModule->formHybridEditable, true) as $field)
         {
@@ -69,35 +63,31 @@ class ProtocolEntryForm extends Form
                 continue;
             }
 
-            $instance->{$field} = $submission[$field];
+            $instance->{$field} = $submissionData->{$field};
         }
 
         $instance->save();
     }
 
-    protected function deleteReferenceEntity()
+    protected function deleteReferenceEntity($submissionData = null)
     {
         if (!$this->objModule->privacyAddReferenceEntity || !$this->objModule->privacyDeleteReferenceEntityAfterOptAction)
         {
             return;
         }
 
-        $session = \Session::getInstance();
-
-        $decoded = $session->get('PRIVACY_DATA_' . $this->objModule->id);
-
-        if (!is_array($decoded))
-        {
-            return;
-        }
-
         $protocolUtil = new ProtocolUtil();
 
-        $instance = $protocolUtil->findReferenceEntity(
-            $this->objModule->privacyReferenceEntityTable,
-            $this->objModule->privacyReferenceEntityField,
-            $decoded['referenceFieldValue']
-        );
+        $referenceField = $protocolUtil->getMappedPrivacyProtocolField($this->objModule->privacyReferenceEntityField, deserialize($this->objModule->formHybridPrivacyProtocolFieldMapping, true));
+        $instance = null;
+
+        if ($submissionData) {
+            $instance = $protocolUtil->findReferenceEntity(
+                $this->objModule->privacyReferenceEntityTable,
+                $this->objModule->privacyReferenceEntityField,
+                $submissionData->{$referenceField}
+            );
+        }
 
         if (null === $instance)
         {

@@ -55,7 +55,6 @@ class ModuleProtocolEntryEditor extends \Module
         if (is_array($decoded))
         {
             $this->setDefaultValuesFromToken($decoded);
-            $this->storeJwtDataToSession($decoded);
         }
 
         $this->formHybridAddPrivacyProtocolEntry = true;
@@ -108,12 +107,5 @@ class ModuleProtocolEntryEditor extends \Module
                 $dca['fields'][$field]['default'] = $value;
             }
         }
-    }
-
-    protected function storeJwtDataToSession($decoded)
-    {
-        $session = \Session::getInstance();
-
-        $session->set('PRIVACY_DATA_' . $this->id, $decoded);
     }
 }
