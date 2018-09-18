@@ -18,6 +18,11 @@ class ProtocolUtil {
 
     public function getMappedPrivacyProtocolFieldValues($data, $mapping)
     {
+        if (is_object($data))
+        {
+            $data = (array) $data;
+        }
+
         foreach ($mapping as $mappingData)
         {
             $data[$mappingData['protocolField']] = $data[$mappingData['entityField']];

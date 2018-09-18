@@ -56,6 +56,8 @@ class ProtocolEntryForm extends Form
             return;
         }
 
+        $changedFields = [];
+
         foreach (deserialize($this->objModule->formHybridEditable, true) as $field)
         {
             if (in_array($field, ['id', 'tstamp', 'pid', 'dateAdded']))
@@ -63,7 +65,21 @@ class ProtocolEntryForm extends Form
                 continue;
             }
 
+            if ($instance->{$field} != $submissionData->{$field})
+            {
+                $changedFields[$field] = [
+                    'old' => $instance->{$field},
+                    'new' => $submissionData->{$field}
+                ];
+            }
+
             $instance->{$field} = $submissionData->{$field};
+        }
+
+        if (isset($GLOBALS['TL_HOOKS']['privacy_afterUpdateReferenceEntity']) && is_array($GLOBALS['TL_HOOKS']['privacy_afterUpdateReferenceEntity'])) {
+            foreach ($GLOBALS['TL_HOOKS']['privacy_afterUpdateReferenceEntity'] as $callback) {
+                \System::importStatic($callback[0])->{$callback[1]}($instance, $submissionData, $changedFields, $this->objModule);
+            }
         }
 
         $instance->save();

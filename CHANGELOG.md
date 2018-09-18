@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.6.2] - 2018-09-18
+
+### Fixed
+- opt in issues
+
 ## [1.6.1] - 2018-09-17
 
 ### Fixed
