@@ -73,13 +73,15 @@ $GLOBALS['TL_DCA']['tl_privacy_protocol_archive'] = [
     'palettes'    => [
         '__selector__' => [
             'addCodeProtocol',
-            'setReferenceFieldOnChange'
+            'addReferenceEntity',
+            'addEntryTypeToReferenceFieldOnChange',
         ],
-        'default'      => '{general_legend},title;{config_legend},personalFieldsExplanation,personalFields,titlePattern,skipIpAnonymization,addCodeProtocol,setReferenceFieldOnChange;'
+        'default'      => '{general_legend},title;{config_legend},personalFieldsExplanation,personalFields,titlePattern,skipIpAnonymization,addCodeProtocol,addReferenceEntity;'
     ],
     'subpalettes' => [
         'addCodeProtocol'           => 'codeFields',
-        'setReferenceFieldOnChange' => 'referenceFieldTable,referenceField,referenceFieldProtocolForeignKey,referenceFieldForeignKey,createInstanceOnChange'
+        'addReferenceEntity' => 'referenceFieldTable,referenceFieldForeignKey,referenceFieldProtocolForeignKey,createInstanceOnChange,referenceTimestampField,addEntryTypeToReferenceFieldOnChange',
+        'addEntryTypeToReferenceFieldOnChange' => 'referenceEntryTypeField'
     ],
     'fields'      => [
         'id'                               => [
@@ -151,8 +153,8 @@ $GLOBALS['TL_DCA']['tl_privacy_protocol_archive'] = [
             'eval'             => ['multiple' => true, 'tl_class' => 'w50 clr', 'mandatory' => true],
             'sql'              => "blob NULL",
         ],
-        'setReferenceFieldOnChange'        => [
-            'label'     => &$GLOBALS['TL_LANG']['tl_privacy_protocol_archive']['setReferenceFieldOnChange'],
+        'addReferenceEntity'        => [
+            'label'     => &$GLOBALS['TL_LANG']['tl_privacy_protocol_archive']['addReferenceEntity'],
             'exclude'   => true,
             'inputType' => 'checkbox',
             'eval'      => ['tl_class' => 'w50', 'submitOnChange' => true],
@@ -164,11 +166,11 @@ $GLOBALS['TL_DCA']['tl_privacy_protocol_archive'] = [
             'filter'           => true,
             'inputType'        => 'select',
             'options_callback' => ['HeimrichHannot\Haste\Dca\General', 'getDataContainers'],
-            'eval'             => ['tl_class' => 'w50 clr', 'mandatory' => true, 'includeBlankOption' => true, 'submitOnChange' => true, 'chosen' => true],
+            'eval'             => ['tl_class' => 'w50', 'mandatory' => true, 'includeBlankOption' => true, 'submitOnChange' => true, 'chosen' => true],
             'sql'              => "varchar(64) NOT NULL default ''"
         ],
-        'referenceField'                   => [
-            'label'            => &$GLOBALS['TL_LANG']['tl_privacy_protocol_archive']['referenceField'],
+        'referenceEntryTypeField'                   => [
+            'label'            => &$GLOBALS['TL_LANG']['tl_privacy_protocol_archive']['referenceEntryTypeField'],
             'exclude'          => true,
             'filter'           => true,
             'inputType'        => 'select',
@@ -188,7 +190,7 @@ $GLOBALS['TL_DCA']['tl_privacy_protocol_archive'] = [
             'filter'           => true,
             'inputType'        => 'select',
             'options_callback' => ['HeimrichHannot\Privacy\Backend\ProtocolEntry', 'getPersonalFieldsAsOptions'],
-            'eval'             => ['tl_class' => 'w50 clr', 'mandatory' => true, 'includeBlankOption' => true, 'chosen' => true],
+            'eval'             => ['tl_class' => 'w50', 'mandatory' => true, 'includeBlankOption' => true, 'chosen' => true],
             'sql'              => "varchar(64) NOT NULL default ''"
         ],
         'referenceFieldForeignKey'         => [
@@ -203,7 +205,7 @@ $GLOBALS['TL_DCA']['tl_privacy_protocol_archive'] = [
 
                 return \HeimrichHannot\Haste\Dca\General::getFields($table, false);
             },
-            'eval'             => ['tl_class' => 'w50', 'mandatory' => true, 'includeBlankOption' => true, 'chosen' => true],
+            'eval'             => ['tl_class' => 'w50 clr', 'mandatory' => true, 'includeBlankOption' => true, 'chosen' => true],
             'sql'              => "varchar(64) NOT NULL default ''"
         ],
         'createInstanceOnChange' => [
@@ -212,6 +214,28 @@ $GLOBALS['TL_DCA']['tl_privacy_protocol_archive'] = [
             'inputType'               => 'checkbox',
             'eval'                    => ['tl_class' => 'w50'],
             'sql'                     => "char(1) NOT NULL default ''"
+        ],
+        'addEntryTypeToReferenceFieldOnChange'        => [
+            'label'     => &$GLOBALS['TL_LANG']['tl_privacy_protocol_archive']['addEntryTypeToReferenceFieldOnChange'],
+            'exclude'   => true,
+            'inputType' => 'checkbox',
+            'eval'      => ['tl_class' => 'w50', 'submitOnChange' => true],
+            'sql'       => "char(1) NOT NULL default ''"
+        ],
+        'referenceTimestampField'                   => [
+            'label'            => &$GLOBALS['TL_LANG']['tl_privacy_protocol_archive']['referenceTimestampField'],
+            'exclude'          => true,
+            'filter'           => true,
+            'inputType'        => 'select',
+            'options_callback' => function (\Contao\DataContainer $dc) {
+                if (!($table = $dc->activeRecord->referenceFieldTable)) {
+                    return [];
+                }
+
+                return \HeimrichHannot\Haste\Dca\General::getFields($table, false);
+            },
+            'eval'             => ['tl_class' => 'w50', 'includeBlankOption' => true, 'chosen' => true],
+            'sql'              => "varchar(64) NOT NULL default ''"
         ],
     ]
 ];

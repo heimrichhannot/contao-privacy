@@ -1,6 +1,15 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.7.0] - 2018-09-19
+
+### Added
+- support for heimrichhannot/contao-privacy-api-bundle
+
+### Changed
+- refactoring on palette
+- refactoring on method usage and fields
+
 ## [1.6.3] - 2018-09-19
 
 ### Fixed

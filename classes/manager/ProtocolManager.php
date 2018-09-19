@@ -17,9 +17,11 @@ use Contao\ModuleModel;
 use Contao\System;
 use HeimrichHannot\Haste\Dca\General;
 use HeimrichHannot\Haste\Util\StringUtil;
+use HeimrichHannot\Privacy\Backend\Notification;
 use HeimrichHannot\Privacy\Backend\ProtocolEntry;
 use HeimrichHannot\Privacy\Model\ProtocolArchiveModel;
 use HeimrichHannot\Privacy\Model\ProtocolEntryModel;
+use HeimrichHannot\Privacy\Util\ProtocolUtil;
 
 class ProtocolManager
 {
@@ -219,7 +221,7 @@ class ProtocolManager
         $protocolEntry->save();
 
         // set reference field
-        if ($protocolArchive->setReferenceFieldOnChange)
+        if ($protocolArchive->addReferenceEntity)
         {
             $modelClass = Model::getClassFromTable($protocolArchive->referenceFieldTable);
 
@@ -236,34 +238,131 @@ class ProtocolManager
                     {
                         $instance->{$field} = $value;
                     }
+                }
 
-                    if (isset($GLOBALS['TL_HOOKS']['privacy_initReferenceModelOnProtocolChange']) && \is_array($GLOBALS['TL_HOOKS']['privacy_initReferenceModelOnProtocolChange']))
+                if (isset($GLOBALS['TL_HOOKS']['privacy_initReferenceModelOnProtocolChange']) && \is_array($GLOBALS['TL_HOOKS']['privacy_initReferenceModelOnProtocolChange']))
+                {
+                    foreach ($GLOBALS['TL_HOOKS']['privacy_initReferenceModelOnProtocolChange'] as $callback)
                     {
-                        foreach ($GLOBALS['TL_HOOKS']['privacy_initReferenceModelOnProtocolChange'] as $callback)
+                        if (\is_array($callback))
                         {
-                            if (\is_array($callback))
-                            {
-                                $this->import($callback[0]);
-                                $this->{$callback[0]}->{$callback[1]}($instance, $protocolEntry, $data);
-                            }
-                            elseif (\is_callable($callback))
-                            {
-                                $callback($instance, $protocolEntry, $data);
-                            }
+                            $this->import($callback[0]);
+                            $this->{$callback[0]}->{$callback[1]}($instance, $protocolEntry, $data);
+                        }
+                        elseif (\is_callable($callback))
+                        {
+                            $callback($instance, $protocolEntry, $data);
                         }
                     }
                 }
 
-                if (null !== $instance)
+                if ($protocolArchive->referenceTimestampField)
                 {
-                    $instance->{$protocolArchive->referenceField} = $protocolEntry->type;
-
-                    $instance->save();
+                    $instance->{$protocolArchive->referenceTimestampField} = time();
                 }
+
+                if ($protocolArchive->addEntryTypeToReferenceFieldOnChange)
+                {
+                    $instance->{$protocolArchive->referenceEntryTypeField} = $protocolEntry->type;
+                }
+
+                $instance->save();
             }
         }
 
         return $protocolEntry;
+    }
+
+    public function updateReferenceEntity($protocolArchive, $data, $editableFields, $context)
+    {
+        if (($protocolArchive = ProtocolArchiveModel::findByPk($protocolArchive)) === null)
+        {
+            return null;
+        }
+        
+        $protocolUtil = new ProtocolUtil();
+
+        $instance = null;
+
+        if ($data)
+        {
+            $instance = $protocolUtil->findReferenceEntity(
+                $protocolArchive->referenceFieldTable,
+                $protocolArchive->referenceFieldForeignKey,
+                $data->{$protocolArchive->referenceFieldForeignKey}
+            );
+        }
+
+        if (null === $instance)
+        {
+            return null;
+        }
+
+        $changedFields = [];
+
+        foreach ($editableFields as $field)
+        {
+            if (in_array($field, ['id', 'tstamp', 'pid', 'dateAdded']))
+            {
+                continue;
+            }
+
+            if ($instance->{$field} != $data->{$field})
+            {
+                $changedFields[$field] = [
+                    'old' => $instance->{$field},
+                    'new' => $data->{$field}
+                ];
+            }
+
+            $instance->{$field} = $data->{$field};
+        }
+
+        if (isset($GLOBALS['TL_HOOKS']['privacy_afterUpdateReferenceEntity']) && is_array($GLOBALS['TL_HOOKS']['privacy_afterUpdateReferenceEntity'])) {
+            foreach ($GLOBALS['TL_HOOKS']['privacy_afterUpdateReferenceEntity'] as $callback) {
+                \System::importStatic($callback[0])->{$callback[1]}($instance, $data, $changedFields, $context);
+            }
+        }
+
+        $instance->save();
+
+        return $instance;
+    }
+
+    public function deleteReferenceEntity($protocolArchive, $data)
+    {
+        if (($protocolArchive = ProtocolArchiveModel::findByPk($protocolArchive)) === null)
+        {
+            return false;
+        }
+
+        $protocolUtil = new ProtocolUtil();
+
+        $instance = null;
+
+        if ($data) {
+            $instance = $protocolUtil->findReferenceEntity(
+                $protocolArchive->referenceFieldTable,
+                $protocolArchive->referenceFieldForeignKey,
+                $data->{$protocolArchive->referenceFieldForeignKey}
+            );
+        }
+
+        if (null === $instance)
+        {
+            return false;
+        }
+
+        $data = $instance->row();
+
+        $data['table'] = $protocolArchive->referenceFieldTable;
+
+        if ($protocolArchive->referenceFieldTable == 'tl_member') {
+            $data['member'] = $instance->id;
+        }
+
+        // delete entity
+        return $instance->delete();
     }
 
     public function getSelectorFieldDca()
@@ -365,6 +464,72 @@ class ProtocolManager
                 ],
             ],
             'sql'       => "blob NULL",
+        ];
+    }
+
+    public function getTextualFieldMappingFieldDca()
+    {
+        return [
+            'label'     => $GLOBALS['TL_LANG']['MSC']['huhPrivacy']['privacyProtocolFieldMapping'],
+            'inputType' => 'multiColumnEditor',
+            'eval'      => [
+                'tl_class'          => 'long clr',
+                'multiColumnEditor' => [
+                    'minRowCount' => 0,
+                    'fields'      => [
+                        'entityField' => [
+                            'label'                   => &$GLOBALS['TL_LANG']['MSC']['huhPrivacy']['privacyProtocolFieldMapping_entityField'],
+                            'inputType'               => 'text',
+                            'eval'             => [
+                                'includeBlankOption' => true,
+                                'tl_class'           => 'w50',
+                                'mandatory'          => true,
+                                'style'              => 'width: 400px'
+                            ],
+                        ],
+                        'protocolField' => [
+                            'label'            => &$GLOBALS['TL_LANG']['MSC']['huhPrivacy']['privacyProtocolFieldMapping_protocolField'],
+                            'inputType'        => 'select',
+                            'options_callback' => ['HeimrichHannot\Privacy\Backend\ProtocolEntry', 'getFieldsAsOptions'],
+                            'exclude'          => true,
+                            'eval'             => [
+                                'includeBlankOption' => true,
+                                'chosen'             => true,
+                                'tl_class'           => 'w50',
+                                'mandatory'          => true,
+                                'style'              => 'width: 400px'
+                            ],
+                        ]
+                    ],
+                ],
+            ],
+            'sql'       => "blob NULL",
+        ];
+    }
+
+    public function getNotificationFieldDca()
+    {
+        return [
+            'label'            => $GLOBALS['TL_LANG']['MSC']['huhPrivacy']['privacyProtocolNotification'],
+            'exclude'          => true,
+            'search'           => true,
+            'inputType'        => 'select',
+            'options_callback' => ['HeimrichHannot\FormHybrid\Backend\Module', 'getNoficiationMessages'],
+            'eval'             => ['chosen' => true, 'maxlength' => 255, 'tl_class' => 'w50 clr', 'includeBlankOption' => true, 'mandatory' => true],
+            'sql'              => "int(10) unsigned NOT NULL default '0'",
+        ];
+    }
+
+    public function getActivationJumpToFieldDca()
+    {
+        return [
+            'label'                   => $GLOBALS['TL_LANG']['MSC']['huhPrivacy']['privacyProtocolActivationJumpTo'],
+            'exclude'                 => true,
+            'inputType'               => 'pageTree',
+            'foreignKey'              => 'tl_page.title',
+            'eval'                    => ['fieldType'=>'radio', 'tl_class' => 'w50', 'mandatory' => true],
+            'sql'                     => "int(10) unsigned NOT NULL default '0'",
+            'relation'                => ['type'=>'hasOne', 'load'=>'lazy']
         ];
     }
 }

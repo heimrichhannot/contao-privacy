@@ -194,8 +194,3 @@ in a notification email.
 Name | Arguments | Example
 ---- | --------- | -------
 privacy_opt_url | 1. The data for prefilling the form of `ModuleProtocolEntryEditor` and for the resulting privacy protocol entry in the format: `fieldName1:fieldValue1#fieldName2:fieldValue2`<br>2. The jumpTo page id<br>3. The data for finding a corresponding database entity to be linked to the protocol entry (reference table and field is defined in the protocol entry editor's backend config): `referenceFieldValue` (optional) | `{{privacy_opt_url::email:john@example.org#firstname:John#lastname:Doe::1::john@example.org}}`
-
-## FAQ
-
-1. __Question:__ Why isn't there the protocol entry type "opt-in" (i.e. SINGLE opt-in)?<br>
-   __Answer:__ We strongly encourage you to build __double__ opt-in features since courts frequently decide that single opt-in processes are NOT a sufficient solution.

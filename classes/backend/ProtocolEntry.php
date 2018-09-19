@@ -49,7 +49,7 @@ class ProtocolEntry extends \Contao\Backend
     {
         $fields = General::getFields(
             'tl_privacy_protocol_entry',
-            true,
+            false,
             null,
             [
                 'personalField' => true

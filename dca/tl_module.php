@@ -20,7 +20,7 @@ $dca['palettes'][\HeimrichHannot\Privacy\Backend\Module::PROTOCOL_ENTRY_EDITOR] 
 $dca['palettes']['__selector__'][]                                                            = 'privacyAddReferenceEntity';
 $dca['palettes']['__selector__'][]                                                            = 'privacyDeleteReferenceEntityAfterOptAction';
 $dca['palettes']['__selector__'][]                                                            = 'addOptOutDeletePrivacyProtocolEntry';
-$dca['subpalettes']['privacyAddReferenceEntity']                                              = 'privacyReferenceEntityTable,privacyReferenceEntityField,privacyUpdateReferenceEntityFields,privacyDeleteReferenceEntityAfterOptAction';
+$dca['subpalettes']['privacyAddReferenceEntity']                                              = 'privacyUpdateReferenceEntityFields,privacyDeleteReferenceEntityAfterOptAction';
 $dca['subpalettes']['privacyDeleteReferenceEntityAfterOptAction']                             = 'addOptOutDeletePrivacyProtocolEntry';
 $dca['subpalettes']['addOptOutDeletePrivacyProtocolEntry']                                    = 'optOutDeletePrivacyProtocolArchive,optOutDeletePrivacyProtocolEntryType,optOutDeletePrivacyProtocolDescription';
 
@@ -48,30 +48,6 @@ $fields = [
         'inputType' => 'checkbox',
         'eval'      => ['tl_class' => 'w50', 'submitOnChange' => true],
         'sql'       => "char(1) NOT NULL default ''"
-    ],
-    'privacyReferenceEntityTable'             => [
-        'label'            => &$GLOBALS['TL_LANG']['tl_module']['privacyReferenceEntityTable'],
-        'exclude'          => true,
-        'filter'           => true,
-        'inputType'        => 'select',
-        'options_callback' => ['HeimrichHannot\Haste\Dca\General', 'getDataContainers'],
-        'eval'             => ['tl_class' => 'w50', 'mandatory' => true, 'includeBlankOption' => true, 'submitOnChange' => true, 'chosen' => true],
-        'sql'              => "varchar(64) NOT NULL default ''"
-    ],
-    'privacyReferenceEntityField'             => [
-        'label'            => &$GLOBALS['TL_LANG']['tl_module']['privacyReferenceEntityField'],
-        'exclude'          => true,
-        'filter'           => true,
-        'inputType'        => 'select',
-        'options_callback' => function (\Contao\DataContainer $dc) {
-            if (!($table = $dc->activeRecord->privacyReferenceEntityTable)) {
-                return [];
-            }
-
-            return \HeimrichHannot\Haste\Dca\General::getFields($table, false);
-        },
-        'eval'             => ['tl_class' => 'w50', 'mandatory' => true, 'includeBlankOption' => true, 'chosen' => true],
-        'sql'              => "varchar(64) NOT NULL default ''"
     ],
     'privacyUpdateReferenceEntityFields' => [
         'label'                   => &$GLOBALS['TL_LANG']['tl_module']['privacyUpdateReferenceEntityFields'],

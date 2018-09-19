@@ -213,6 +213,7 @@ $GLOBALS['TL_DCA']['tl_privacy_protocol_entry'] = [
         'table'                   => [
             'label'            => &$GLOBALS['TL_LANG']['tl_privacy_protocol_entry']['table'],
             'exclude'          => true,
+            'filter'           => true,
             'inputType'        => 'select',
             'options_callback' => ['HeimrichHannot\Haste\Dca\General', 'getDataContainers'],
             'eval'             => ['tl_class' => 'w50', 'includeBlankOption' => true, 'chosen' => true],

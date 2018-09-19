@@ -15,6 +15,10 @@ $lang['privacyProtocolEntryDescription'][0]           = 'Beschreibung';
 $lang['privacyProtocolEntryDescription'][1]           = 'Geben Sie hier eine Beschreibung für den Eintrag im Datenschutzprotokoll ein.';
 $lang['privacyProtocolFieldMapping'][0]               = 'Feldabbildung';
 $lang['privacyProtocolFieldMapping'][1]               = 'Wählen Sie hier bei Bedarf Felder des Datensatzes aus, die in den Protokolleintrag überführt werden sollen.';
+$lang['privacyProtocolNotification'][0]               = 'Benachrichtigung';
+$lang['privacyProtocolNotification'][1]               = 'Wählen Sie hier die Benachrichtigung, die verschickt werden soll, aus.';
+$lang['privacyProtocolActivationJumpTo'][0]           = 'Weiterleitungsseite (Aktivierung)';
+$lang['privacyProtocolActivationJumpTo'][1]           = 'Wählen Sie hier die Seite aus, die ein Modul vom Typ "Protokolleintragseditor" enthält und ein Opt aktiviert.';
 $lang['privacyProtocolFieldMapping_entityField'][0]   = 'Feld im Datensatz';
 $lang['privacyProtocolFieldMapping_protocolField'][0] = 'Feld im Protokolleintrag';
 $lang['afterDelete']                                  = 'Nach dem Löschen';
@@ -38,5 +42,5 @@ $lang['config_legend'] = 'Konfiguration';
 /**
  * Reference
  */
-$lang['reference']['male'] = 'Männlich';
+$lang['reference']['male']   = 'Männlich';
 $lang['reference']['female'] = 'Weiblich';

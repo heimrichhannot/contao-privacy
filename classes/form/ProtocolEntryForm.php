@@ -4,6 +4,7 @@ namespace HeimrichHannot\Privacy\Form;
 
 use HeimrichHannot\FormHybrid\Form;
 use HeimrichHannot\Privacy\Manager\ProtocolManager;
+use HeimrichHannot\Privacy\Model\ProtocolArchiveModel;
 use HeimrichHannot\Privacy\Util\ProtocolUtil;
 
 class ProtocolEntryForm extends Form
@@ -19,6 +20,22 @@ class ProtocolEntryForm extends Form
 
         $this->updateReferenceEntity($submissionData);
         $this->deleteReferenceEntity($submissionData);
+
+        if (isset($GLOBALS['TL_HOOKS']['privacy_afterActivation']) && \is_array($GLOBALS['TL_HOOKS']['privacy_afterActivation']))
+        {
+            foreach ($GLOBALS['TL_HOOKS']['privacy_afterActivation'] as $callback)
+            {
+                if (\is_array($callback))
+                {
+                    $this->import($callback[0]);
+                    $this->{$callback[0]}->{$callback[1]}($submissionData, $this->objModule);
+                }
+                elseif (\is_callable($callback))
+                {
+                    $callback($submissionData, $this->objModule);
+                }
+            }
+        }
     }
 
     protected function afterSubmitCallback(\DataContainer $dc)
@@ -37,52 +54,13 @@ class ProtocolEntryForm extends Form
             return;
         }
 
-        $protocolUtil = new ProtocolUtil();
-
-        $referenceField = $protocolUtil->getMappedPrivacyProtocolField($this->objModule->privacyReferenceEntityField, deserialize($this->objModule->formHybridPrivacyProtocolFieldMapping, true));
-        $instance = null;
-
-        if ($submissionData)
-        {
-            $instance = $protocolUtil->findReferenceEntity(
-                $this->objModule->privacyReferenceEntityTable,
-                $this->objModule->privacyReferenceEntityField,
-                $submissionData->{$referenceField}
-            );
-        }
-
-        if (null === $instance)
-        {
-            return;
-        }
-
-        $changedFields = [];
-
-        foreach (deserialize($this->objModule->formHybridEditable, true) as $field)
-        {
-            if (in_array($field, ['id', 'tstamp', 'pid', 'dateAdded']))
-            {
-                continue;
-            }
-
-            if ($instance->{$field} != $submissionData->{$field})
-            {
-                $changedFields[$field] = [
-                    'old' => $instance->{$field},
-                    'new' => $submissionData->{$field}
-                ];
-            }
-
-            $instance->{$field} = $submissionData->{$field};
-        }
-
-        if (isset($GLOBALS['TL_HOOKS']['privacy_afterUpdateReferenceEntity']) && is_array($GLOBALS['TL_HOOKS']['privacy_afterUpdateReferenceEntity'])) {
-            foreach ($GLOBALS['TL_HOOKS']['privacy_afterUpdateReferenceEntity'] as $callback) {
-                \System::importStatic($callback[0])->{$callback[1]}($instance, $submissionData, $changedFields, $this->objModule);
-            }
-        }
-
-        $instance->save();
+        $protocolManager = new ProtocolManager();
+        $protocolManager->updateReferenceEntity(
+            $this->objModule->formHybridPrivacyProtocolArchive,
+            $submissionData,
+            deserialize($this->objModule->formHybridEditable, true),
+            $this->objModule
+        );
     }
 
     protected function deleteReferenceEntity($submissionData = null)
@@ -92,41 +70,17 @@ class ProtocolEntryForm extends Form
             return;
         }
 
-        $protocolUtil = new ProtocolUtil();
+        $protocolManager = new ProtocolManager();
 
-        $referenceField = $protocolUtil->getMappedPrivacyProtocolField($this->objModule->privacyReferenceEntityField, deserialize($this->objModule->formHybridPrivacyProtocolFieldMapping, true));
-        $instance = null;
+        $affectedRows = $protocolManager->deleteReferenceEntity(
+            $this->objModule->formHybridPrivacyProtocolArchive,
+            $submissionData
+        );
 
-        if ($submissionData) {
-            $instance = $protocolUtil->findReferenceEntity(
-                $this->objModule->privacyReferenceEntityTable,
-                $this->objModule->privacyReferenceEntityField,
-                $submissionData->{$referenceField}
-            );
-        }
-
-        if (null === $instance)
-        {
-            return;
-        }
-
-        $data = $instance->row();
-
-        $data['table'] = $this->objModule->privacyReferenceEntityTable;
-
-        if ($this->objModule->privacyReferenceEntityTable == 'tl_member') {
-            $data['member'] = $instance->id;
-        }
-
-        // delete entity
-        $affectedRows = $instance->delete();
-
-        if ($affectedRows > 0 && $this->objModule->addOptOutDeletePrivacyProtocolEntry) {
+        if ($affectedRows !== false && $affectedRows > 0 && $this->objModule->addOptOutDeletePrivacyProtocolEntry) {
             if ($this->objModule->optOutDeletePrivacyProtocolDescription) {
                 $data['description'] = $this->objModule->optOutDeletePrivacyProtocolDescription;
             }
-
-            $protocolManager = new ProtocolManager();
 
             $protocolManager->addEntryFromModule(
                 $this->objModule->optOutDeletePrivacyProtocolEntryType,
