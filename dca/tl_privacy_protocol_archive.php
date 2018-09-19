@@ -164,7 +164,7 @@ $GLOBALS['TL_DCA']['tl_privacy_protocol_archive'] = [
             'filter'           => true,
             'inputType'        => 'select',
             'options_callback' => ['HeimrichHannot\Haste\Dca\General', 'getDataContainers'],
-            'eval'             => ['tl_class' => 'w50', 'mandatory' => true, 'includeBlankOption' => true, 'submitOnChange' => true, 'chosen' => true],
+            'eval'             => ['tl_class' => 'w50 clr', 'mandatory' => true, 'includeBlankOption' => true, 'submitOnChange' => true, 'chosen' => true],
             'sql'              => "varchar(64) NOT NULL default ''"
         ],
         'referenceField'                   => [
@@ -188,7 +188,7 @@ $GLOBALS['TL_DCA']['tl_privacy_protocol_archive'] = [
             'filter'           => true,
             'inputType'        => 'select',
             'options_callback' => ['HeimrichHannot\Privacy\Backend\ProtocolEntry', 'getPersonalFieldsAsOptions'],
-            'eval'             => ['tl_class' => 'w50', 'mandatory' => true, 'includeBlankOption' => true, 'chosen' => true],
+            'eval'             => ['tl_class' => 'w50 clr', 'mandatory' => true, 'includeBlankOption' => true, 'chosen' => true],
             'sql'              => "varchar(64) NOT NULL default ''"
         ],
         'referenceFieldForeignKey'         => [

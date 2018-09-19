@@ -1,6 +1,16 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.6.3] - 2018-09-19
+
+### Fixed
+- wrong foreign key comparison 
+- missing template in contao 3
+- error due filter flag for table row in log entries
+
+### Updated
+- enhanced foreign key display in protocal archive form
+
 ## [1.6.2] - 2018-09-18
 
 ### Fixed

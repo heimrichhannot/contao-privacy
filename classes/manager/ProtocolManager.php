@@ -225,7 +225,7 @@ class ProtocolManager
 
             if (class_exists($modelClass))
             {
-                $instance = $modelClass::findBy([$protocolArchive->referenceFieldProtocolForeignKey . '=?'], [$protocolEntry->{$protocolArchive->referenceFieldForeignKey}]);
+                $instance = $modelClass::findBy([$protocolArchive->referenceFieldForeignKey . '=?'], [$protocolEntry->{$protocolArchive->referenceFieldProtocolForeignKey}]);
 
                 if (null === $instance && $protocolArchive->createInstanceOnChange)
                 {
