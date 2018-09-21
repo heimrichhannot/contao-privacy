@@ -50,7 +50,7 @@ class ModuleBackendOptIn extends \BackendModule
 
         // add fields
         $fields = [];
-        $lang = Request::getPost('language') ?: ($GLOBALS['TL_LANGUAGE'] ?: 'de');
+        $lang   = Request::getPost('language') ?: ($GLOBALS['TL_LANGUAGE'] ?: 'de');
 
         foreach ($dca['fields'] as $field => $data) {
             switch ($field) {
@@ -73,15 +73,30 @@ class ModuleBackendOptIn extends \BackendModule
 
     protected function sendEmail()
     {
-        $dca = &$GLOBALS['TL_DCA']['tl_privacy_backend'];
-        $lang = Request::getPost('language') ?: ($GLOBALS['TL_LANGUAGE'] ?: 'de');
+        $dca           = &$GLOBALS['TL_DCA']['tl_privacy_backend'];
+        $lang          = Request::getPost('language') ?: ($GLOBALS['TL_LANGUAGE'] ?: 'de');
+        $backendConfig = deserialize(\Config::get('privacyOptInNotifications'), true);
+        $notification  = null;
+        $jumpTo        = null;
 
-        if (($message = MessageModel::findPublishedById(Config::get('privacyOptInNotification'))) !== null) {
+        foreach ($backendConfig as $config) {
+            if ($config['language'] === $lang) {
+                $notification = $config['notification'];
+                $jumpTo       = $config['jumpTo'];
+            }
+        }
+
+        if (!$notification || !$jumpTo)
+        {
+            \Message::addError($GLOBALS['TL_LANG']['MSC']['huhPrivacy']['messageNoBackendOptInConfigFound']);
+            Controller::redirect(Url::getCurrentUrl());
+        }
+
+        if (($message = MessageModel::findPublishedById($notification)) !== null) {
             $tmpLang = $GLOBALS['TL_LANGUAGE'];
 
             $GLOBALS['TL_LANGUAGE'] = $lang;
 
-            $jumpTo = Config::get('privacyOptInJumpTo');
             $tokens = [
                 'salutation_submission' => Salutations::createSalutation(
                     $lang,
@@ -89,15 +104,14 @@ class ModuleBackendOptIn extends \BackendModule
                 )
             ];
 
-            $data = [];
+            $data             = [];
             $dataForInsertTag = [];
 
             foreach (Request::getInstance()->request as $field => $value) {
                 $tokens['form_' . $field] = $value;
 
-                if (!isset($dca['fields'][$field]['eval']['skipForJwtToken']) || !$dca['fields'][$field]['eval']['skipForJwtToken'])
-                {
-                    $data[$field] = $value;
+                if (!isset($dca['fields'][$field]['eval']['skipForJwtToken']) || !$dca['fields'][$field]['eval']['skipForJwtToken']) {
+                    $data[$field]       = $value;
                     $dataForInsertTag[] = "$field:$value";
                 }
             }

@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.7.1] - 2018-09-21
+
+### Fixed
+- backend opt-in language issue
+- settings palette issue
+
 ## [1.7.0] - 2018-09-19
 
 ### Added

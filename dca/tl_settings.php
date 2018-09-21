@@ -5,7 +5,7 @@ $dca = &$GLOBALS['TL_DCA']['tl_settings'];
 /**
  * Palettes
  */
-$dca['palettes']['default'] .= ';{privacy_legend},privacyProtocolCallbacks,privacyProtocolFieldMapping,privacyOptInNotifications,privacyOptInJumpTo;';
+$dca['palettes']['default'] .= ';{huh_privacy_legend},privacyProtocolCallbacks,privacyProtocolFieldMapping,privacyOptInNotifications,privacyOptInJumpTo;';
 
 /**
  * Fields
@@ -99,20 +99,35 @@ $fields = [
             'multiColumnEditor' => [
                 'minRowCount' => 0,
                 'fields' => [
-                    'privacyOptInNotification'           => [
+                    'language' => [
+                        'label'     => &$GLOBALS['TL_LANG']['tl_settings']['privacyOptInLanguage'],
+                        'exclude'   => true,
+                        'inputType' => 'select',
+                        'options'   => System::getLanguages(true),
+                        'eval'      => [
+                            'rgxp'               => 'locale',
+                            'tl_class'           => 'w50',
+                            'includeBlankOption' => true,
+                            'mandatory'          => true,
+                            'skipForJwtToken'    => true,
+                            'groupStyle' => 'width: 200px'
+                        ]
+                    ],
+                    'notification'           => [
                         'label'            => &$GLOBALS['TL_LANG']['tl_settings']['privacyOptInNotification'],
                         'exclude'          => true,
                         'search'           => true,
                         'inputType'        => 'select',
                         'options_callback' => ['HeimrichHannot\FormHybrid\Backend\Module', 'getNoficiationMessages'],
-                        'eval'             => ['chosen' => true, 'maxlength' => 255, 'tl_class' => 'w50 clr', 'includeBlankOption' => true, 'mandatory' => true]
+                        'eval'             => ['chosen' => true, 'maxlength' => 255, 'tl_class' => 'w50 clr',
+                                               'includeBlankOption' => true, 'mandatory' => true, 'groupStyle' => 'width: 400px']
                     ],
-                    'privacyOptInJumpTo' => [
+                    'jumpTo' => [
                         'label'                   => &$GLOBALS['TL_LANG']['tl_settings']['privacyOptInJumpTo'],
                         'exclude'                 => true,
                         'inputType'               => 'pageTree',
                         'foreignKey'              => 'tl_page.title',
-                        'eval'                    => ['fieldType'=>'radio', 'tl_class' => 'w50', 'mandatory' => true],
+                        'eval'                    => ['fieldType'=>'radio', 'tl_class' => 'w50', 'mandatory' => true, 'groupStyle' => 'width: 200px'],
                         'relation'                => ['type'=>'hasOne', 'load'=>'lazy']
                     ],
                 ],

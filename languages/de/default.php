@@ -26,13 +26,14 @@ $lang['afterDelete']                                  = 'Nach dem Löschen';
 /**
  * Messages
  */
-$lang['optInTokenInvalid']   = 'Der Link ist ungültig. Bitte prüfen Sie, ob Sie den Link korrekt eingegeben haben.';
-$lang['optOutSuccessful']    = 'Die Abmeldung war erfolgreich. Sie werden von nun an keine E-Mails mehr von uns erhalten.';
-$lang['optOutFailed']        = 'Die Abmeldung war nicht erfolgreich. Bitte prüfen Sie, ob Sie den Link korrekt eingegeben haben.';
-$lang['optOutFailedNoToken'] = 'Die Abmeldung war nicht erfolgreich. Kein Abmelde-Token gefunden.';
-$lang['alreadyOptedOut']     = 'Sie sind bereits abgemeldet und erhalten daher keine E-Mails von uns.';
-$lang['confirmOptInEmail']   = 'Möchten Sie wirklich an die eingegebene E-Mail-Adresse eine E-Mail zur Werbeeinwilligung senden? Haben Sie dafür die Einwilligung der Person?';
-$lang['messageNoJwtToken']   = 'Es wurde kein Token gefunden. Haben Sie sich vertippt?';
+$lang['optInTokenInvalid']                = 'Der Link ist ungültig. Bitte prüfen Sie, ob Sie den Link korrekt eingegeben haben.';
+$lang['optOutSuccessful']                 = 'Die Abmeldung war erfolgreich. Sie werden von nun an keine E-Mails mehr von uns erhalten.';
+$lang['optOutFailed']                     = 'Die Abmeldung war nicht erfolgreich. Bitte prüfen Sie, ob Sie den Link korrekt eingegeben haben.';
+$lang['optOutFailedNoToken']              = 'Die Abmeldung war nicht erfolgreich. Kein Abmelde-Token gefunden.';
+$lang['alreadyOptedOut']                  = 'Sie sind bereits abgemeldet und erhalten daher keine E-Mails von uns.';
+$lang['confirmOptInEmail']                = 'Möchten Sie wirklich an die eingegebene E-Mail-Adresse eine E-Mail zur Werbeeinwilligung senden? Haben Sie dafür die Einwilligung der Person?';
+$lang['messageNoJwtToken']                = 'Es wurde kein Token gefunden. Haben Sie sich vertippt?';
+$lang['messageNoBackendOptInConfigFound'] = 'Es wurde keine Backend-Opt-In-Konfiguration für die gewählte Sprache gefunden. Erstellen Sie diese in den Contao-Einstellungen unter "Benachrichtigungen (Backend-Opt-In)".';
 
 /**
  * Misc

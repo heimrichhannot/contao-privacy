@@ -14,20 +14,21 @@ $lang['privacyProtocolFieldMapping'][0] = 'Abbildung von DCA-Feldern in Protokol
 $lang['privacyProtocolFieldMapping'][1] = 'Wählen Sie hier bei Bedarf Felder des Datensatzes aus, die in den Protokolleintrag überführt werden sollen.';
 $lang['privacyProtocolEntityField'][0]  = 'DCA-Feld';
 $lang['privacyProtocolField'][0]        = 'Protokollfeld';
-$lang['privacyOptInNotification'][0]    = 'Benachrichtigung (Backend-Opt-In)';
-$lang['privacyOptInNotification'][1]    = 'Wählen Sie hier die Benachrichtigung aus, die bei der Nutzung des Backend-Opt-In-Formulars verschickt werden soll. ';
-$lang['privacyOptInJumpTo'][0]          = 'Weiterleitungsseite (Backend-Opt-In)';
-$lang['privacyOptInJumpTo'][1]          = 'Wählen Sie hier die Seite aus, auf der sich das Modul vom Typ Protokolleintragseditor befindet.';
+$lang['privacyOptInNotifications'][0]   = 'Benachrichtigungen (Backend-Opt-In)';
+$lang['privacyOptInNotifications'][1]   = 'Wählen Sie hier die Benachrichtigungen aus, die bei der Nutzung des Backend-Opt-In-Formulars verschickt werden sollen. ';
+$lang['privacyOptInLanguage'][0]        = 'Sprache';
+$lang['privacyOptInNotification'][0]    = 'Benachrichtigung';
+$lang['privacyOptInJumpTo'][0]          = 'Weiterleitungsseite';
 $lang['cmsScope'][0]                    = 'CMS-Modus';
 $lang['cmsScope'][1]                    = 'In diesem Feld wird gespeichert, ob die Interaktion im Frontend oder im Backend stattgefunden hat.';
 
 /**
  * Legends
  */
-$lang['privacy_legend'] = 'Datenschutz';
+$lang['huh_privacy_legend'] = 'Datenschutz';
 
 $lang['reference']['huhPrivacy'] = [
-    \HeimrichHannot\Privacy\Backend\ProtocolEntry::CMS_SCOPE_BACKEND   => 'Backend',
-    \HeimrichHannot\Privacy\Backend\ProtocolEntry::CMS_SCOPE_FRONTEND  => 'Frontend',
-    \HeimrichHannot\Privacy\Backend\ProtocolEntry::CMS_SCOPE_BOTH      => 'Beide'
+    \HeimrichHannot\Privacy\Backend\ProtocolEntry::CMS_SCOPE_BACKEND  => 'Backend',
+    \HeimrichHannot\Privacy\Backend\ProtocolEntry::CMS_SCOPE_FRONTEND => 'Frontend',
+    \HeimrichHannot\Privacy\Backend\ProtocolEntry::CMS_SCOPE_BOTH     => 'Beide'
 ];
