@@ -14,12 +14,12 @@ class ProtocolEntryForm extends Form
 
     public function compile() {}
 
-    protected function afterActivationCallback(\DataContainer $dc, $objModel, $submissionData = null)
+    protected function afterActivationCallback(\DataContainer $dc, $objModel, $jwtData = null)
     {
-        parent::afterActivationCallback($dc, $objModel, $submissionData);
+        parent::afterActivationCallback($dc, $objModel, $jwtData);
 
-        $this->updateReferenceEntity($submissionData);
-        $this->deleteReferenceEntity($submissionData);
+        $this->updateReferenceEntity($jwtData);
+        $this->deleteReferenceEntity($jwtData);
 
         if (isset($GLOBALS['TL_HOOKS']['privacy_afterActivation']) && \is_array($GLOBALS['TL_HOOKS']['privacy_afterActivation']))
         {
@@ -28,11 +28,11 @@ class ProtocolEntryForm extends Form
                 if (\is_array($callback))
                 {
                     $this->import($callback[0]);
-                    $this->{$callback[0]}->{$callback[1]}($submissionData, $this->objModule);
+                    $this->{$callback[0]}->{$callback[1]}($jwtData, $this->objModule);
                 }
                 elseif (\is_callable($callback))
                 {
-                    $callback($submissionData, $this->objModule);
+                    $callback($jwtData, $this->objModule);
                 }
             }
         }
@@ -47,7 +47,7 @@ class ProtocolEntryForm extends Form
         }
     }
 
-    protected function updateReferenceEntity($submissionData = null)
+    protected function updateReferenceEntity($jwtData = null)
     {
         if (!$this->objModule->privacyAddReferenceEntity || !$this->objModule->privacyUpdateReferenceEntityFields)
         {
@@ -55,15 +55,16 @@ class ProtocolEntryForm extends Form
         }
 
         $protocolManager = new ProtocolManager();
+
         $protocolManager->updateReferenceEntity(
             $this->objModule->formHybridPrivacyProtocolArchive,
-            $submissionData,
+            $jwtData->submission,
             deserialize($this->objModule->formHybridEditable, true),
             $this->objModule
         );
     }
 
-    protected function deleteReferenceEntity($submissionData = null)
+    protected function deleteReferenceEntity($jwtData = null)
     {
         if (!$this->objModule->privacyAddReferenceEntity || !$this->objModule->privacyDeleteReferenceEntityAfterOptAction)
         {
@@ -74,7 +75,7 @@ class ProtocolEntryForm extends Form
 
         $affectedRows = $protocolManager->deleteReferenceEntity(
             $this->objModule->formHybridPrivacyProtocolArchive,
-            $submissionData
+            $jwtData->submission
         );
 
         if ($affectedRows !== false && $affectedRows > 0 && $this->objModule->addOptOutDeletePrivacyProtocolEntry) {
