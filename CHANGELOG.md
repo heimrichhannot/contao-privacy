@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.8.0] - 2018-10-17
+
+### Added
+- custom label parameter for ProtocolManager::getSelectorFieldDca()
+
 ## [1.7.2] - 2018-10-16
 
 ### Fixed

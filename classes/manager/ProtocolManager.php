@@ -365,10 +365,17 @@ class ProtocolManager
         return $instance->delete();
     }
 
-    public function getSelectorFieldDca()
+	/**
+	 * @param string|null $label A custom label
+	 * @return array
+	 */
+    public function getSelectorFieldDca($label = null)
     {
+    	if (!$label || !is_string($label)) {
+    		$label = $GLOBALS['TL_LANG']['MSC']['huhPrivacy']['addPrivacyProtocolEntry'];
+		}
         return [
-            'label'     => $GLOBALS['TL_LANG']['MSC']['huhPrivacy']['addPrivacyProtocolEntry'],
+            'label'     => $label,
             'exclude'   => true,
             'inputType' => 'checkbox',
             'eval'      => ['tl_class' => 'w50 clr', 'submitOnChange' => true],
