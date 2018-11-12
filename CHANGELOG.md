@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [2.0.0] - 2018-11-12
+
+### Changed
+- renamed tl_privacy_protocol_entry.table to tl_privacy_protocol_entry.dataContainer
+**Caution: Depending on your implementation this can be breaking!**
+- added a migration command to the dca to rename the table while keeping the data (we can't rely on the contao databaseupdater here)
+
 ## [1.8.1] - 2018-10-30
 
 ### Added

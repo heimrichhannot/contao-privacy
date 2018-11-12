@@ -59,7 +59,7 @@ class HookListener
                             $instance = $dc->activeRecord ?: General::getModelInstance($callback['table'], $id);
 
                             $entryData = $instance->row();
-                            $entryData['table'] = $callback['table'];
+                            $entryData['dataContainer'] = $callback['table'];
                             $entryData['type'] = ProtocolEntry::TYPE_CREATE;
 
                             $createEntryFunc($entryData);
@@ -71,7 +71,7 @@ class HookListener
                             $instance = $dc->activeRecord ?: General::getModelInstance($callback['table'], $id);
 
                             $entryData = $instance->row();
-                            $entryData['table'] = $callback['table'];
+                            $entryData['dataContainer'] = $callback['table'];
                             $entryData['type'] = ProtocolEntry::TYPE_UPDATE;
 
                             $createEntryFunc($entryData);
@@ -83,7 +83,7 @@ class HookListener
                             $instance = $dc->activeRecord ?: General::getModelInstance($callback['table'], $id);
 
                             $entryData = $instance->row();
-                            $entryData['table'] = $callback['table'];
+                            $entryData['dataContainer'] = $callback['table'];
                             $entryData['type'] = ProtocolEntry::TYPE_DELETE;
 
                             $createEntryFunc($entryData);

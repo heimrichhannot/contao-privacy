@@ -209,6 +209,12 @@ class ProtocolManager
                 case 'codeStacktrace':
                     $protocolEntry->codeStacktrace = (new \Exception())->getTraceAsString();
                     break;
+				case 'dataContainer':
+					// provide backward compability to implementations with table (version 1.x)
+					if (isset($data['table']))
+					{
+						$protocolEntry->dataContainer = $data['table'];
+					}
             }
 
             // $data always has the highest priority
@@ -355,7 +361,7 @@ class ProtocolManager
 
         $data = $instance->row();
 
-        $data['table'] = $protocolArchive->referenceFieldTable;
+        $data['dataContainer'] = $protocolArchive->referenceFieldTable;
 
         if ($protocolArchive->referenceFieldTable == 'tl_member') {
             $data['member'] = $instance->id;

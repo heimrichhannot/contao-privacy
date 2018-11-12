@@ -66,7 +66,7 @@ $GLOBALS['TL_DCA']['tl_privacy_protocol_entry'] = [
     ],
     'palettes' => [
         '__selector__' => [],
-        'default'      => '{type_date_legend},type,dateAdded,authorType,author;'.'{user_legend},personalDataExplanation,ip,gender,academicTitle,firstname,lastname,email,member,user;'.'{interaction_legend},url,cmsScope,bundle,bundleVersion,table,description,module,moduleName,moduleType,element,elementType;'.'{code_legend},codeFile,codeLine,codeFunction,codeStacktrace;',
+        'default'      => '{type_date_legend},type,dateAdded,authorType,author;'.'{user_legend},personalDataExplanation,ip,gender,academicTitle,firstname,lastname,email,member,user;'.'{interaction_legend},url,cmsScope,bundle,bundleVersion,dataContainer,description,module,moduleName,moduleType,element,elementType;'.'{code_legend},codeFile,codeLine,codeFunction,codeStacktrace;',
     ],
     'fields'   => [
         'id'                      => [
@@ -210,8 +210,8 @@ $GLOBALS['TL_DCA']['tl_privacy_protocol_entry'] = [
             'eval'      => ['maxlength' => 32, 'tl_class' => 'w50'],
             'sql'       => "varchar(32) NOT NULL default ''",
         ],
-        'table'                   => [
-            'label'            => &$GLOBALS['TL_LANG']['tl_privacy_protocol_entry']['table'],
+        'dataContainer'                   => [
+            'label'            => &$GLOBALS['TL_LANG']['tl_privacy_protocol_entry']['dataContainer'],
             'exclude'          => true,
             'filter'           => true,
             'inputType'        => 'select',
@@ -337,6 +337,8 @@ $GLOBALS['TL_DCA']['tl_privacy_protocol_entry'] = [
 ];
 
 \HeimrichHannot\Haste\Dca\General::addAuthorFieldAndCallback('tl_privacy_protocol_entry');
+\HeimrichHannot\Privacy\Util\MigrationUtil::migrateDatebaseTableField();
+
 
 if (class_exists('HeimrichHannot\Exporter\ModuleExporter')) {
     $GLOBALS['TL_DCA']['tl_privacy_protocol_entry']['list']['global_operations']['export_csv'] = \HeimrichHannot\Exporter\ModuleExporter::getGlobalOperation(
