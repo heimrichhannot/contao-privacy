@@ -288,30 +288,36 @@ class ProtocolEntry extends \Contao\Backend
                 }
                 break;
 
-            case 'select':
+             case 'select':
+                if (!in_array($id, $root)) {
+                    throw new \Exception('Not enough permissions to access privacy_protocol_entry archive ID '.$id.'.');
+                }
+                break;
+
             case 'editAll':
             case 'deleteAll':
             case 'overrideAll':
             case 'cutAll':
             case 'copyAll':
-                if (!in_array($id, $root))
-                {
-                    throw new \Exception('Not enough permissions to access privacy_protocol_entry archive ID ' . $id . '.');
+                if (!in_array($id, $root)) {
+                    throw new \Exception('Not enough permissions to access privacy_protocol_entry archive ID '.$id.'.');
                 }
 
                 $objArchive = $database->prepare("SELECT id FROM tl_privacy_protocol_entry WHERE pid=?")->execute($id);
 
-                if ($objArchive->numRows < 1)
-                {
-                    throw new \Exception('Invalid privacy_protocol_entry archive ID ' . $id . '.');
+                if ($objArchive->numRows < 1) {
+                    throw new \Exception('Invalid privacy_protocol_entry archive ID '.$id.'.');
                 }
 
-                /** @var \Symfony\Component\HttpFoundation\Session\SessionInterface $session */
                 $session = \Contao\Session::getInstance();
 
-                $session                   = $session->all();
-                $session['CURRENT']['IDS'] = array_intersect($session['CURRENT']['IDS'], $objArchive->fetchEach('id'));
-                $session->replace($session);
+                $sessionData                   = $session->getData();
+                $sessionData['CURRENT']['IDS'] = array_intersect((is_array($sessionData['CURRENT']['IDS']) ? $sessionData['CURRENT']['IDS'] : []), $objArchive->fetchEach('id'));
+                try {
+                    $session->setData($sessionData);
+                } catch (\Exception $e) {
+                }
+
                 break;
 
             default:

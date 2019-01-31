@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [2.0.1] - 2019-01-31
+
+### Fixed
+- `tl_privacy_protocol_entry` exception on select, editAll, deleteAll, overrideAll, cutAll, copyAll
+
 ## [2.0.0] - 2018-11-12
 
 ### Changed
