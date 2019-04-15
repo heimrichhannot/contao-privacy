@@ -24,7 +24,7 @@ class MigrationUtil
 	{
 		$db = Database::getInstance();
 
-		if ($db->fieldExists('table','tl_privacy_protocol_entry', true))
+		if ($db->tableExists('tl_privacy_protocol_entry', null, true) && $db->fieldExists('table','tl_privacy_protocol_entry', true))
 		{
 			$db->execute('ALTER TABLE `tl_privacy_protocol_entry` CHANGE `table` `dataContainer` varchar(64) NOT NULL default \'\'');
 			Controller::reload();

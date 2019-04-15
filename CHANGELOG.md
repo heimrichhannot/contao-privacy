@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [2.0.2] - 2019-04-15
+
+### Fixed
+- install tool error when not migrating from version 1
+
 ## [2.0.1] - 2019-01-31
 
 ### Fixed
