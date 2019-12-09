@@ -10,7 +10,7 @@ class ProtocolUtil {
         $modelClass = Model::getClassFromTable($table);
 
         if (class_exists($modelClass)) {
-            return $modelClass::findOneBy(["$field=?"], [$fieldValue]);
+            return $modelClass::findOneBy(["$table.$field=?"], [$fieldValue]);
         }
 
         return false;

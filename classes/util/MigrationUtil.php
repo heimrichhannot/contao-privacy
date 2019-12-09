@@ -17,17 +17,16 @@ use Contao\Database;
 
 class MigrationUtil
 {
-	/**
-	 * Migrate tl_privacy_protocol_entry.table to tl_privacy_protocol_entry.dataContainer while keeping table values.
-	 */
-	public static function migrateDatebaseTableField()
-	{
-		$db = Database::getInstance();
+    /**
+     * Migrate tl_privacy_protocol_entry.table to tl_privacy_protocol_entry.dataContainer while keeping table values.
+     */
+    public static function migrateDatebaseTableField()
+    {
+        $db = Database::getInstance();
 
-		if ($db->tableExists('tl_privacy_protocol_entry', null, true) && $db->fieldExists('table','tl_privacy_protocol_entry', true))
-		{
-			$db->execute('ALTER TABLE `tl_privacy_protocol_entry` CHANGE `table` `dataContainer` varchar(64) NOT NULL default \'\'');
-			Controller::reload();
-		}
-	}
+        if ($db->tableExists('tl_privacy_protocol_entry', null, true) && $db->fieldExists('table', 'tl_privacy_protocol_entry', true)) {
+            $db->execute('ALTER TABLE `tl_privacy_protocol_entry` CHANGE `table` `dataContainer` varchar(64) NOT NULL default \'\'');
+            Controller::reload();
+        }
+    }
 }
