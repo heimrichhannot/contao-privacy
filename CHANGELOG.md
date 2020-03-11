@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [2.1.0] - 2020-03-11
+
+### Fixed
+- dc multilingual related bug
+
 ## [2.0.3] - 2019-04-15
 
 ### Fixed

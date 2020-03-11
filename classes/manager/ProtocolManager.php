@@ -202,14 +202,24 @@ class ProtocolManager
             $modelClass = Model::getClassFromTable($protocolArchive->referenceFieldTable);
 
             if (class_exists($modelClass)) {
+                $set = [];
+                $justCreated = false;
+
                 $instance = $modelClass::findBy([$protocolArchive->referenceFieldTable . '.' . $protocolArchive->referenceFieldForeignKey . '=?'], [$protocolEntry->{$protocolArchive->referenceFieldProtocolForeignKey}]);
 
                 if (null === $instance && $protocolArchive->createInstanceOnChange) {
-                    $instance         = new $modelClass();
-                    $instance->tstamp = $instance->dateAdded = time();
+                    $justCreated = true;
+
+                    $set['tstamp'] = $set['dateAdded'] = time();
+
+                    $dbFields = Database::getInstance()->getFieldNames($protocolArchive->referenceFieldTable);
 
                     foreach ($data as $field => $value) {
-                        $instance->{$field} = $value;
+                        if (!in_array($field, $dbFields)) {
+                            continue;
+                        }
+
+                        $set[$field] = $value;
                     }
                 }
 
@@ -217,22 +227,31 @@ class ProtocolManager
                     foreach ($GLOBALS['TL_HOOKS']['privacy_initReferenceModelOnProtocolChange'] as $callback) {
                         if (\is_array($callback)) {
                             $this->import($callback[0]);
-                            $this->{$callback[0]}->{$callback[1]}($instance, $protocolEntry, $data);
+                            $this->{$callback[0]}->{$callback[1]}($set, $protocolEntry, $data);
                         } elseif (\is_callable($callback)) {
-                            $callback($instance, $protocolEntry, $data);
+                            $callback($set, $protocolEntry, $data);
                         }
                     }
                 }
 
                 if ($protocolArchive->referenceTimestampField) {
-                    $instance->{$protocolArchive->referenceTimestampField} = time();
+                    $set[$protocolArchive->referenceTimestampField] = time();
                 }
 
                 if ($protocolArchive->addEntryTypeToReferenceFieldOnChange) {
-                    $instance->{$protocolArchive->referenceEntryTypeField} = $protocolEntry->type;
+                    $set[$protocolArchive->referenceEntryTypeField] = $protocolEntry->type;
                 }
 
-                $instance->save();
+                // store with Database since the entity might use DC_Multilingual
+                if ($justCreated) {
+                    Database::getInstance()->prepare(
+                        'INSERT INTO ' . $protocolArchive->referenceFieldTable . ' %s'
+                    )->set($set)->execute();
+                } else {
+                    Database::getInstance()->prepare(
+                        'UPDATE ' . $protocolArchive->referenceFieldTable . ' %s WHERE ' . $protocolArchive->referenceFieldTable . '.id=?'
+                    )->set($set)->execute($instance->id);
+                }
             }
         }
 
@@ -262,6 +281,7 @@ class ProtocolManager
         }
 
         $changedFields = [];
+        $set = [];
 
         foreach ($editableFields as $field) {
             if (in_array($field, ['id', 'tstamp', 'pid', 'dateAdded'])) {
@@ -275,16 +295,18 @@ class ProtocolManager
                 ];
             }
 
-            $instance->{$field} = $data->{$field};
+            $set[$field] = $data->{$field};
         }
 
         if (isset($GLOBALS['TL_HOOKS']['privacy_afterUpdateReferenceEntity']) && is_array($GLOBALS['TL_HOOKS']['privacy_afterUpdateReferenceEntity'])) {
             foreach ($GLOBALS['TL_HOOKS']['privacy_afterUpdateReferenceEntity'] as $callback) {
-                \System::importStatic($callback[0])->{$callback[1]}($instance, $data, $changedFields, $context);
+                \System::importStatic($callback[0])->{$callback[1]}($set, $data, $changedFields, $context);
             }
         }
 
-        $instance->save();
+        Database::getInstance()->prepare(
+            'UPDATE ' . $protocolArchive->referenceFieldTable . ' %s WHERE ' . $protocolArchive->referenceFieldTable . '.id=?'
+        )->set($set)->execute($instance->id);
 
         return $instance;
     }
