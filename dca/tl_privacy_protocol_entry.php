@@ -6,7 +6,6 @@ $GLOBALS['TL_DCA']['tl_privacy_protocol_entry'] = [
     'config'   => [
         'dataContainer'     => 'Table',
         'ptable'            => 'tl_privacy_protocol_archive',
-        'enableVersioning'  => true,
         'onload_callback'   => [
             ['HeimrichHannot\Privacy\Backend\ProtocolEntry', 'checkPermission'],
             ['HeimrichHannot\Privacy\Backend\ProtocolEntry', 'modifyDca'],
@@ -45,17 +44,6 @@ $GLOBALS['TL_DCA']['tl_privacy_protocol_entry'] = [
                 'label' => &$GLOBALS['TL_LANG']['tl_privacy_protocol_entry']['edit'],
                 'href'  => 'act=edit',
                 'icon'  => 'edit.gif',
-            ],
-            'copy'   => [
-                'label' => &$GLOBALS['TL_LANG']['tl_privacy_protocol_entry']['copy'],
-                'href'  => 'act=copy',
-                'icon'  => 'copy.gif',
-            ],
-            'delete' => [
-                'label'      => &$GLOBALS['TL_LANG']['tl_privacy_protocol_entry']['delete'],
-                'href'       => 'act=delete',
-                'icon'       => 'delete.gif',
-                'attributes' => 'onclick="if(!confirm(\''.$GLOBALS['TL_LANG']['MSC']['deleteConfirm'].'\'))return false;Backend.getScrollOffset()"',
             ],
             'show'   => [
                 'label' => &$GLOBALS['TL_LANG']['tl_privacy_protocol_entry']['show'],

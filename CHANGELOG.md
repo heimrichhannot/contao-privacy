@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [2.2.0] - 2020-03-24
+
+- removed copy and delete from operations in tl_privacy_protocol_entry
+- removed versioning in tl_privacy_protocol_entry
+
 ## [2.1.0] - 2020-03-11
 
 ### Fixed
