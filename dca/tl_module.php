@@ -2,6 +2,8 @@
 
 $dca = &$GLOBALS['TL_DCA']['tl_module'];
 
+$protocolManager = new HeimrichHannot\Privacy\Manager\ProtocolManager();
+
 /**
  * Palettes
  */
