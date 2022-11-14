@@ -1,5 +1,7 @@
 # Contao Privacy Bundle
 
+> For Contao 4 and PHP 8 please use <https://github.com/heimrichhannot/contao-privacy-bundle>!
+
 This bundle contains functionality concerning privacy and the European Union's "General Data Protection Regulation" (GDPR, in German: "Datenschutz-Grundverordnung", DSGVO).
 
 ## Legal disclaimer
