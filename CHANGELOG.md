@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [2.2.2] - 2023-02-09
+
+- Updated: allow php 8.0
+
 ## [2.2.1] - 2020-08-31
 
 - fixed protocol manager
